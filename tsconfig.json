@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "locale": "zh-CN",
+    "types": [ "node"],
+    "outDir": "./lib",
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "noImplicitAny": false,
+    // "paths": {
+    //   "@/*": ["src/*"],
+    // },
+    // "declaration": true,
+    // "declarationDir": "types",
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost", "es5"]
+  },
+  "include": [ "src", "node_modules/ora" ],
+  "exclude": [
+    "node_modules",
+    "lib",
+  ]
+}

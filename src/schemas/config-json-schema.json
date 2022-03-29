@@ -1,0 +1,52 @@
+{
+  "$id": "configdata",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "DEPLOY_CONFIG_DATA": {
+      "properties": {
+        "weapp": {
+          "appid": "微信小程戏appid",
+          "privateKeyPath": "密钥文件相对项目根目录的相对路径，例如 key/private.appid.key",
+          "enable": "开启/关闭构建",
+          "projectPath": "项目构建目录"
+        },
+        "tt": {
+          "email": "字节小程序邮箱",
+          "password": "字节小程序密码",
+          "enable": "开启/关闭构建",
+          "projectPath": "项目构建目录"
+        },
+        "alipay": {
+          "appId": "支付宝小程序appId",
+          "toolId": "工具id",
+          "privateKeyPath": "密钥文件相对项目根目录的相对路径，例如 key/pkcs8-private-pem",
+          "enable": "开启/关闭构建",
+          "projectPath": "项目构建目录"
+        },
+        "swan": {
+          "token": "鉴权需要的token令牌",
+          "enable": "开启/关闭构建",
+          "projectPath": "项目构建目录"
+        },
+        "desc": {
+          "description": "自定义发布备注, 默认取最近一次git commit message",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "configdata#/definitions/ProjectType",
+          "description": "项目的类型，有效值 miniProgram/miniProgramPlugin/miniGame/miniGamePlugin"
+        },
+        "version": {
+          "description": "自定义发布版本号, 默认取package.json中的version字段",
+          "type": "string"
+        }
+      },
+      "required": ["privateKeyPath", "projectPath", "type"],
+      "type": "object"
+    },
+    "ProjectType": {
+      "enum": ["miniGame", "miniGamePlugin", "miniProgram", "miniProgramPlugin"],
+      "type": "string"
+    }
+  }
+}
