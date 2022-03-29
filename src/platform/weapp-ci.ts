@@ -42,7 +42,7 @@ export default class WeappCI extends BaseCI {
   async open () {
     // 检查安装路径是否存在
     if (!(await fs.existsSync(this.devToolsInstallPath))) {
-      printLog('微信开发者工具安装路径不存在', this.devToolsInstallPath)
+      printLog.error('微信开发者工具安装路径不存在', this.devToolsInstallPath)
       return
     }
     /** 命令行工具所在路径 */
@@ -61,30 +61,30 @@ export default class WeappCI extends BaseCI {
       : `/Library/Application Support/微信开发者工具/${md5}/Default/.ide-status`
     )
     if (!(await fs.existsSync(ideStatusFile))) {
-      printLog(errMesg)
+      printLog.error(errMesg)
       return
     }
     fs.readFile(ideStatusFile, 'utf8', (err, data) => {
       if (data === 'Off') {
-        printLog(errMesg)
+        printLog.error(errMesg)
         return
       }
     })
 
     if (!(await fs.existsSync(cliPath))) {
-      printLog('命令行工具路径不存在', cliPath)
+      printLog.error('命令行工具路径不存在', cliPath)
     }
-    printLog( '微信开发者工具...')
+    printLog.pending( '微信开发者工具...')
     cp.exec(`${cliPath} open --project ${this.appPath}`, (err) => {
       if (err) {
-        printLog(err.message)
+        printLog.error(err.message)
       }
     })
   }
 
   async preview () {
     try {
-      printLog('上传开发版代码到微信后台并预览')
+      printLog.info('上传开发版代码到微信后台并预览')
       const uploadResult = await ci.preview({
         project: this.instance,
         version: this.version,
@@ -110,8 +110,8 @@ export default class WeappCI extends BaseCI {
 
   async upload () {
     try {
-      printLog'上传体验版代码到微信后台')
-      printLog`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
+      printLog.info('上传体验版代码到微信后台')
+      printLog.info(`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
       const uploadResult = await ci.upload({
         project: this.instance,
         version: this.version,

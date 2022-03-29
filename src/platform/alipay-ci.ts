@@ -1,10 +1,66 @@
+/* eslint-disable no-console */
+import * as miniu from 'miniu'
+import * as path from 'path'
+import chalk from 'chalk';
+import fs from 'fs';
 import BaseCI from '../base-ci'
+import generateQrCode from '../utils/qr-code'
+import { printLog } from '../utils/console';
 export default class AlipayCI extends BaseCI {
-    async _init () {}
-    open () {}
-    
-    async upload () {}
+  protected _init (): void {
+    if (this.deployConfig.alipay == null) {
+      throw new Error('请为"taro-workflow"插件配置 "alipay" 选项')
+    }
+    const { toolId, privateKeyPath: _privateKeyPath, proxy } = this.deployConfig.alipay
+    const privateKeyPath = path.isAbsolute(_privateKeyPath) ? _privateKeyPath : path.join(this.appPath, _privateKeyPath)
+    if (!fs.existsSync(privateKeyPath)) {
+      throw new Error(`"alipay.privateKeyPath"选项配置的路径不存在,本次上传终止:${privateKeyPath}`)
+    }
 
-    async preview () {}
+    miniu.setConfig({
+      toolId,
+      privateKey: fs.readFileSync(privateKeyPath, 'utf-8'),
+      proxy
+    })
+  }
+
+  open () {
+    printLog.error('阿里小程序不支持 "--open" 参数打开开发者工具')
+  }
+
+  async upload () {
+    const clientType = this.deployConfig.alipay!.clientType || 'alipay'
+    printLog.info('上传代码到阿里小程序后台', clientType)
+    // 上传结果CI库本身有提示，故此不做异常处理
+    // TODO 阿里的CI库上传时不能设置“禁止压缩”，所以上传时被CI二次压缩代码，可能会造成报错，这块暂时无法处理; SDK上传不支持设置描述信息
+    const result = await miniu.miniUpload({
+      project: this.deployConfig.alipay!.projectPath,
+      appId: this.deployConfig.alipay!.appId,
+      packageVersion: this.version,
+      clientType,
+      experience: true,
+      onProgressUpdate (info) {
+        const { status, data } = info
+        console.log(status, data)
+      }
+    })
+    if (result.packages) {
+      const allPackageInfo = result.packages.find(pkg => pkg.type === 'FULL')
+      const mainPackageInfo = result.packages.find((item) => item.type === 'MAIN')
+      const extInfo = `本次上传${allPackageInfo!.size} ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size : ''}`
+      console.log(chalk.green(`上传成功 ${new Date().toLocaleString()} ${extInfo}`))
+    }
+  }
+
+  async preview () {
+    const previewResult = await miniu.miniPreview({
+        project: this.deployConfig.alipay!.projectPath,
+      appId: this.deployConfig.alipay!.appId,
+      clientType: this.deployConfig.alipay!.clientType || 'alipay',
+      qrcodeFormat: 'base64'
+    })
+    console.log('预览二维码地址：', previewResult.packageQrcode)
+    generateQrCode(previewResult.packageQrcode!)
+  }
 
 }
