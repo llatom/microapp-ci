@@ -2,15 +2,15 @@ import WeappCI from './platform/weapp-ci'
 import TTCI from './platform/tt-ci'
 import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
-import { printLog } from './utils/console';
-import  { DEPLOY_CONFIG_DATA } from './types/base-ci'
+import { printLog } from './utils/console'
+import { DEPLOY_CONFIG_DATA } from './types/base-ci'
 
 export class MiniAppCi {
-  constructor( private deployConfig: DEPLOY_CONFIG_DATA ) {
-    this._init(this.deployConfig);
+  constructor(private deployConfig: DEPLOY_CONFIG_DATA) {
+    this._init(this.deployConfig)
   }
 
-  _init (deployConfig) {
+  _init(deployConfig) {
     const platform = deployConfig.platform
     let ci
     switch (platform) {
@@ -30,24 +30,24 @@ export class MiniAppCi {
         break
     }
     if (!ci) {
-      printLog.error(`"taro-workflow" 暂不支持 "${platform}" 平台`)
+      printLog.error(`"microapp-ci" 暂不支持 "${platform}" 平台`)
       return
     } else {
       return ci
     }
   }
 
-  async open () {
+  async open() {
     const ci = this._init(this.deployConfig)
     ci.open()
   }
 
-  async upload () {
+  async upload() {
     const ci = this._init(this.deployConfig)
     ci.upload()
   }
 
-  async preview () {
+  async preview() {
     const ci = this._init(this.deployConfig)
     ci.preview()
   }

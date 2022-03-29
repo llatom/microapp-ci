@@ -1,10 +1,10 @@
 {
-  "name": "taro-workflow",
+  "name": "microapp-ci",
   "version": "0.0.1",
   "description": "Taro小程序多端开发CI方案",
   "main": "bin/index.js",
   "bin": {
-    "taro-workflow": "bin/index.js"
+    "microapp-ci": "bin/index.js"
   },
   "scripts": {
     "start": "tsc --watch",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marsczen/taro-workflow.git"
+    "url": "git+https://github.com/marsczen/microapp-ci.git"
   },
   "keywords": [
     "taro",
@@ -45,7 +45,7 @@
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/marsczen/taro-workflow/issues"
+    "url": "https://github.com/marsczen/microapp-ci/issues"
   },
-  "homepage": "https://github.com/marsczen/taro-workflow#readme"
+  "homepage": "https://github.com/marsczen/microapp-ci#readme"
 }

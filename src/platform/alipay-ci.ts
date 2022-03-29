@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
 import * as miniu from 'miniu'
 import * as path from 'path'
-import chalk from 'chalk';
-import fs from 'fs';
+import chalk from 'chalk'
+import fs from 'fs'
 import BaseCI from '../base-ci'
 import generateQrCode from '../utils/qr-code'
-import { printLog } from '../utils/console';
+import { printLog } from '../utils/console'
 export default class AlipayCI extends BaseCI {
-  protected _init (): void {
+  protected _init(): void {
     if (this.deployConfig.alipay == null) {
-      throw new Error('请为"taro-workflow"插件配置 "alipay" 选项')
+      throw new Error('请为"microapp-ci"插件配置 "alipay" 选项')
     }
     const { toolId, privateKeyPath: _privateKeyPath, proxy } = this.deployConfig.alipay
     const privateKeyPath = path.isAbsolute(_privateKeyPath) ? _privateKeyPath : path.join(this.appPath, _privateKeyPath)
@@ -24,13 +24,13 @@ export default class AlipayCI extends BaseCI {
     })
   }
 
-  open () {
+  open() {
     printLog.error('阿里小程序不支持 "--open" 参数打开开发者工具')
   }
 
-  async preview () {
+  async preview() {
     const previewResult = await miniu.miniPreview({
-        project: this.deployConfig.alipay!.projectPath,
+      project: this.deployConfig.alipay!.projectPath,
       appId: this.deployConfig.alipay!.appId,
       clientType: this.deployConfig.alipay!.clientType || 'alipay',
       qrcodeFormat: 'base64'
@@ -39,7 +39,7 @@ export default class AlipayCI extends BaseCI {
     generateQrCode(previewResult.packageQrcode!)
   }
 
-  async upload () {
+  async upload() {
     const clientType = this.deployConfig.alipay!.clientType || 'alipay'
     printLog.info('上传代码到阿里小程序后台', clientType)
     // 上传结果CI库本身有提示，故此不做异常处理
@@ -50,17 +50,16 @@ export default class AlipayCI extends BaseCI {
       packageVersion: this.version,
       clientType,
       experience: true,
-      onProgressUpdate (info) {
+      onProgressUpdate(info) {
         const { status, data } = info
         console.log(status, data)
       }
     })
     if (result.packages) {
       const allPackageInfo = result.packages.find(pkg => pkg.type === 'FULL')
-      const mainPackageInfo = result.packages.find((item) => item.type === 'MAIN')
+      const mainPackageInfo = result.packages.find(item => item.type === 'MAIN')
       const extInfo = `本次上传${allPackageInfo!.size} ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size : ''}`
       console.log(chalk.green(`上传成功 ${new Date().toLocaleString()} ${extInfo}`))
     }
   }
-
 }
