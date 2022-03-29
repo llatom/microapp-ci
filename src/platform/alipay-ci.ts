@@ -28,6 +28,17 @@ export default class AlipayCI extends BaseCI {
     printLog.error('阿里小程序不支持 "--open" 参数打开开发者工具')
   }
 
+  async preview () {
+    const previewResult = await miniu.miniPreview({
+        project: this.deployConfig.alipay!.projectPath,
+      appId: this.deployConfig.alipay!.appId,
+      clientType: this.deployConfig.alipay!.clientType || 'alipay',
+      qrcodeFormat: 'base64'
+    })
+    console.log('预览二维码地址：', previewResult.packageQrcode)
+    generateQrCode(previewResult.packageQrcode!)
+  }
+
   async upload () {
     const clientType = this.deployConfig.alipay!.clientType || 'alipay'
     printLog.info('上传代码到阿里小程序后台', clientType)
@@ -50,17 +61,6 @@ export default class AlipayCI extends BaseCI {
       const extInfo = `本次上传${allPackageInfo!.size} ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size : ''}`
       console.log(chalk.green(`上传成功 ${new Date().toLocaleString()} ${extInfo}`))
     }
-  }
-
-  async preview () {
-    const previewResult = await miniu.miniPreview({
-        project: this.deployConfig.alipay!.projectPath,
-      appId: this.deployConfig.alipay!.appId,
-      clientType: this.deployConfig.alipay!.clientType || 'alipay',
-      qrcodeFormat: 'base64'
-    })
-    console.log('预览二维码地址：', previewResult.packageQrcode)
-    generateQrCode(previewResult.packageQrcode!)
   }
 
 }
