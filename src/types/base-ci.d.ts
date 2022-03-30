@@ -92,6 +92,14 @@ export default abstract class BaseCI {
     public webhookUrl: string;
     /** 是否安装依赖 */
     public npmInstall: boolean;
+    /** 字节小程序CI配置 */
+    public tt: TTConfig;
+    /** 支付宝系列小程序配置 */
+    public alipay: AlipayConfig;
+    /** 百度小程序配置 */
+    public swan: SwanConfig;
+    /** 微信小程序CI配置 */
+    public weapp: WeappConfig;
     constructor(deployConfig: DEPLOY_CONFIG_DATA);
     /** 初始化函数，会被构造函数调用 */
     protected abstract _init(): void;

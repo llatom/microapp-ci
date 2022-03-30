@@ -14,7 +14,7 @@ export default class TTCI extends BaseCI {
   }
 
   async _beforeCheck() {
-    await tt.loginByEmail(this.deployConfig.tt!.email, this.deployConfig.tt!.password)
+    await tt.loginByEmail({email: this.deployConfig.tt?.email, password: this.deployConfig.tt?.password})
     return await tt.checkSession()
   }
 

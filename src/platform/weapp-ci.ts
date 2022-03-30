@@ -10,7 +10,6 @@ import BaseCI from '../base-ci'
 import { handleProgress } from '../utils/utils'
 import { printLog } from '../utils/console'
 
-const rootPath = process.cwd()
 
 export default class WeappCI extends BaseCI {
   private instance: Project
