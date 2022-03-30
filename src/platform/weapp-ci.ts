@@ -13,7 +13,9 @@ import { printLog } from '../utils/printLog'
 export default class WeappCI extends BaseCI {
   private instance: Project
   /** 微信开发者安装路径 */
-  private devToolsInstallPath: string
+  | undefined
+  /** 微信开发者安装路径 */
+  private devToolsInstallPath: string | undefined
 
   _init() {
     if (this.deployConfig.weapp == null) {
@@ -42,7 +44,7 @@ export default class WeappCI extends BaseCI {
   async open() {
     // 检查安装路径是否存在
     if (!(await fs.existsSync(this.devToolsInstallPath))) {
-      printLog.error('微信开发者工具安装路径不存在', this.devToolsInstallPath)
+      printLog.error(`微信开发者工具安装路径不存在, ${this.devToolsInstallPath}`)
       return
     }
     /** 命令行工具所在路径 */
@@ -54,7 +56,7 @@ export default class WeappCI extends BaseCI {
       '工具的服务端口已关闭。要使用命令行调用工具，请打开工具 -> 设置 -> 安全设置，将服务端口开启。详细信息: https://developers.weixin.qq.com/miniprogram/dev/devtools/cli.html'
     const installPath = isWindows ? this.devToolsInstallPath : `${this.devToolsInstallPath}/Contents/MacOS`
     const md5 = require('crypto').createHash('md5').update(installPath).digest('hex')
-    const USER_HOME = process.platform === 'win32' ? process.env.HOMEPATH : process.env.HOME
+    const USER_HOME: string = process.platform === 'win32' ? process.env.HOMEPATH ?? '' : process.env?.HOME ?? ''
     const ideStatusFile = path.join(
       USER_HOME,
       isWindows
@@ -73,7 +75,7 @@ export default class WeappCI extends BaseCI {
     })
 
     if (!(await fs.existsSync(cliPath))) {
-      printLog.error('命令行工具路径不存在', cliPath)
+      printLog.error(`${cliPath}命令行工具路径不存在`)
     }
     printLog.pending('微信开发者工具...')
     cp.exec(`${cliPath} open --project ${this.appPath}`, err => {

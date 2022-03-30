@@ -100,6 +100,8 @@ export default abstract class BaseCI {
     public swan: SwanConfig;
     /** 微信小程序CI配置 */
     public weapp: WeappConfig;
+    /** 构建项目的路径 */
+    public projectPath: string
     constructor(deployConfig: DEPLOY_CONFIG_DATA);
     /** 初始化函数，会被构造函数调用 */
     protected abstract _init(): void;
