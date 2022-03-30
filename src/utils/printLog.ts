@@ -22,8 +22,8 @@ export class printLog {
         this.spinnerWarn(`${chalk.yellow(msg)}`)
     }
 
-    public static ok(msg: string) {
-        this.spinnerSucceed(msg);
+    public static success(msg: string) {
+        this.spinnerSucceed(`${chalk.green(msg)}`);
     }
 
     public static error(msg: string) {

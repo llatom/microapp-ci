@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import * as miniu from 'miniu'
 import * as path from 'path'
-import chalk from 'chalk'
 import fs from 'fs'
 import BaseCI from '../base-ci'
 import generateQrCode from '../utils/qr-code'
-import { printLog } from '../utils/console'
+import { printLog } from '../utils/printLog'
 export default class AlipayCI extends BaseCI {
   protected _init(): void {
     if (this.deployConfig.alipay == null) {
@@ -35,7 +34,7 @@ export default class AlipayCI extends BaseCI {
       clientType: this.deployConfig.alipay!.clientType || 'alipay',
       qrcodeFormat: 'base64'
     })
-    console.log('预览二维码地址：', previewResult.packageQrcode)
+    printLog.info(`预览二维码地址： ${previewResult.packageQrcode}`)
     generateQrCode(previewResult.packageQrcode!)
   }
 
@@ -52,14 +51,14 @@ export default class AlipayCI extends BaseCI {
       experience: true,
       onProgressUpdate(info) {
         const { status, data } = info
-        console.log(status, data)
+        printLog.info(`${status} ${data}`)
       }
     })
     if (result.packages) {
       const allPackageInfo = result.packages.find(pkg => pkg.type === 'FULL')
       const mainPackageInfo = result.packages.find(item => item.type === 'MAIN')
       const extInfo = `本次上传${allPackageInfo!.size} ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size : ''}`
-      console.log(chalk.green(`上传成功 ${new Date().toLocaleString()} ${extInfo}`))
+      printLog.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
     }
   }
 }

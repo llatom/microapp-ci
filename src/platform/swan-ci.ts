@@ -2,9 +2,8 @@
 import * as shell from 'shelljs'
 import * as path from 'path'
 import BaseCI from '../base-ci'
-import chalk from 'chalk'
 import generateQrCode from '../utils/qr-code'
-import { printLog } from '../utils/console'
+import { printLog } from '../utils/printLog'
 export default class SwanCI extends BaseCI {
   private swanBin = path.resolve(require.resolve('swan-toolkit'), '../../.bin/swan')
 
@@ -28,9 +27,7 @@ export default class SwanCI extends BaseCI {
       (_code, stdout, stderr) => {
         if (!stderr) {
           stdout = JSON.parse(stdout)
-          console.log('在线预览地址：', stdout.list[0].url)
-          // console.log('预览图片：', stdout.list[0].urlBase64)
-          // 需要自己将预览二维码打印到控制台
+          printLog.info(`在线预览地址： ${stdout.list[0].url}`)
           generateQrCode(stdout.list[0].url)
         }
       }
@@ -47,8 +44,7 @@ export default class SwanCI extends BaseCI {
       } --min-swan-version ${this.deployConfig.swan!.minSwanVersion || '3.350.6'} --desc ${this.desc} --json`,
       (_code, _stdout, stderr) => {
         if (!stderr) {
-          // stdout = JSON.parse(stdout)
-          console.log(chalk.green(`上传成功 ${new Date().toLocaleString()}`))
+          printLog.success(`上传成功 ${new Date().toLocaleString()}`)
         }
       }
     )

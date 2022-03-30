@@ -3,8 +3,7 @@ import * as tt from 'tt-ide-cli'
 import * as cp from 'child_process'
 import * as fs from 'fs'
 import BaseCI from '../base-ci'
-import chalk from 'chalk'
-import { printLog } from '../utils/console'
+import { printLog } from '../utils/printLog'
 
 export default class TTCI extends BaseCI {
   async _init() {
@@ -24,22 +23,22 @@ export default class TTCI extends BaseCI {
     const IDE_SCHEMA = 'bytedanceide:'
     const openCmd = isMac ? `open ${IDE_SCHEMA}` : `explorer ${IDE_SCHEMA}`
     if (fs.existsSync(projectPath)) {
-      console.log(chalk.green(`open projectPath: ${projectPath}`))
+      printLog.info(`打开字节跳动小程序项目 ${projectPath}`)
       const openPath = `${openCmd}?path=${projectPath}`
       cp.exec(openPath, error => {
         if (!error) {
-          console.log('打开IDE成功', openPath)
+          printLog.success(`打开IDE ${openPath} 成功`)
         } else {
-          console.log(chalk.red('打开IDE失败', error))
+          printLog.error(`打开IDE失败, ${error}`)
         }
       })
     } else {
-      console.log(chalk.green('open IDE'))
+      printLog.info(`打开IDE`)
       cp.exec(openCmd, error => {
         if (!error) {
-          console.log('打开IDE成功')
+          printLog.success('打开IDE成功')
         } else {
-          console.log(chalk.red('打开IDE失败', error))
+          printLog.error(`打开IDE失败, ${error}`)
         }
       })
     }
@@ -56,8 +55,8 @@ export default class TTCI extends BaseCI {
         force: true,
         small: true
       })
-    } catch (error) {
-      console.log(chalk.red(`上传失败 ${new Date().toLocaleString()} \n${error.message}`))
+    } catch (error:any) {
+      printLog.error(`预览失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
 
@@ -73,8 +72,8 @@ export default class TTCI extends BaseCI {
         version: this.version,
         changeLog: this.desc
       })
-    } catch (error) {
-      console.log(chalk.red(`上传失败 ${new Date().toLocaleString()} \n${error.message}`))
+    } catch (error:any) {
+      printLog.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
 }

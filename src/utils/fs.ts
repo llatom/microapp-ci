@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import DEFAULT_CONFIG_DATA from '../schemas/default-deploy-config.json'
-import { printLog } from '../utils/console'
+import { printLog } from './printLog'
 import { validateConfigData } from './json-schema'
 import DeployOptions from '../types/base-ci'
 
@@ -21,7 +21,7 @@ export function checkDeployConfigFile(rootDir: string): DeployOptions | null {
     //     return null;
     // }
 
-    // printLog.ok(`${CONFIG_FILE_NAME} check passed`);
+    // printLog.success(`${CONFIG_FILE_NAME} check passed`);
     return JSON.parse(data)
   } catch (err: any) {
     printLog.error(err.message)

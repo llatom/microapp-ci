@@ -2,13 +2,12 @@
 import * as path from 'path'
 import * as os from 'os'
 import * as cp from 'child_process'
-import chalk from 'chalk'
 import fs from 'fs'
 import { Project } from 'miniprogram-ci'
 import * as ci from 'miniprogram-ci'
 import BaseCI from '../base-ci'
 import { handleProgress } from '../utils/utils'
-import { printLog } from '../utils/console'
+import { printLog } from '../utils/printLog'
 
 
 export default class WeappCI extends BaseCI {
@@ -103,10 +102,10 @@ export default class WeappCI extends BaseCI {
         const allPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__FULL__')
         const mainPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__APP__')
         const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''}`
-        console.log(chalk.green(`上传成功 ${new Date().toLocaleString()} ${extInfo}`))
+        printLog.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
-    } catch (error) {
-      console.log(chalk.red(`上传失败 ${new Date().toLocaleString()} \n${error.message}`))
+    } catch (error:any) {
+      printLog.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
 
@@ -125,16 +124,14 @@ export default class WeappCI extends BaseCI {
         onProgressUpdate: handleProgress,
         threads: os.cpus.length
       })
-      // const resultTable = this.handleUploadResult(uploadResult);
-
       if (uploadResult.subPackageInfo) {
         const allPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__FULL__')
         const mainPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__APP__')
         const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''}`
-        console.log(chalk.green(`上传成功 ${new Date().toLocaleString()} ${extInfo}`))
+        printLog.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
-    } catch (error) {
-      console.log(chalk.red(`上传失败 ${new Date().toLocaleString()} \n${error.message}`))
+    } catch (error:any) {
+      printLog.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
 }

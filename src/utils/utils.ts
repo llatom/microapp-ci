@@ -1,5 +1,5 @@
 import simpleGit from 'simple-git';
-import { printLog } from '../utils/console';
+import { printLog } from './printLog';
 
 export async function getLatestCommitMsg(baseDir: string) {
   const git = simpleGit(baseDir);
@@ -16,7 +16,7 @@ export function handleProgress(taskStatus) {
       msg = isWxmlTask ? `[Compile] ${msg}` : msg;
 
       if (taskStatus._status === 'done') {
-          printLog.ok(msg);
+          printLog.success(msg);
       } else {
           printLog.pending(msg);
       }

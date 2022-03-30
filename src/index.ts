@@ -2,7 +2,7 @@ import WeappCI from './platform/weapp-ci'
 import TTCI from './platform/tt-ci'
 import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
-import { printLog } from './utils/console'
+import { printLog } from './utils/printLog'
 import { DEPLOY_CONFIG_DATA } from './types/base-ci'
 
 export class MiniAppCi {
