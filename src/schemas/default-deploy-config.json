@@ -23,7 +23,7 @@
     "enable": "开启/关闭构建",
     "projectPath": "项目构建目录"
   },
-  "env": "构建环境",
+  "env": "编译需要用的环境变量",
   "npmInstall": "是否安装依赖",
   "webhookUrl": "构建成功后的webhook回调地址",
   "version": "1.0.0",
