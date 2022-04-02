@@ -14,7 +14,7 @@ export interface WeappConfig {
     /** 上传需要排除的目录 */
     ignores?: Array<string>;
 }
-/** 头条小程序配置 */
+/** 字节小程序配置 */
 export interface TTConfig {
     /** 绑定的邮箱账号 */
     email: string;
@@ -70,7 +70,7 @@ export interface DEPLOY_CONFIG_DATA {
     env: string;
     /** 微信小程序CI配置, 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/devtools/ci.html */
     weapp?: WeappConfig;
-    /** 头条小程序配置, 官方文档地址：https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/developer-instrument/development-assistance/ide-order-instrument */
+    /** 字节小程序配置, 官方文档地址：https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/developer-instrument/development-assistance/ide-order-instrument */
     tt?: TTConfig;
     /** 支付宝系列小程序配置，官方文档地址： https://opendocs.alipay.com/mini/miniu/api */
     alipay?: AlipayConfig;
