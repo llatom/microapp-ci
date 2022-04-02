@@ -45,9 +45,8 @@ export class MiniAppCi {
   async build() {
     const {env, platform} = this.deployConfig
     const platformText = platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
-    const outDir = process.cwd() + '/logs'
     printLog.pending(`正在编译${platformText}小程序...`)
-    const logFilePath = path.join(outDir, 'build_alipay.log')
+    const logFilePath = path.join(process.cwd() , 'build_alipay.log')
     const stream = fs.createWriteStream(logFilePath)
     return new Promise<void>((resolve, reject) => {
       const cmd = `taro build --type ${platform}`
