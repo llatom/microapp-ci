@@ -28,6 +28,7 @@ export default class AlipayCI extends BaseCI {
   }
 
   async preview() {
+    printLog.pending(`正在生成支付宝小程序预览码，请稍后...`)
     const previewResult = await miniu.miniPreview({
       project: this.deployConfig.alipay!.projectPath,
       appId: this.deployConfig.alipay!.appId,

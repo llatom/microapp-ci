@@ -45,7 +45,7 @@ export class MiniAppCi {
   async build() {
     const {env, platform} = this.deployConfig
     const platformText = platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
-    printLog.pending(`正在编译${platformText}小程序...`)
+    printLog.pending(`正在编译${platformText}小程序，请稍后...`)
     const logFilePath = path.join(process.cwd() , 'build_alipay.log')
     const stream = fs.createWriteStream(logFilePath)
     return new Promise<void>((resolve, reject) => {
@@ -65,7 +65,7 @@ export class MiniAppCi {
       })
 
       proc.on('error', (e) => {
-        console.error(`error: ${ e.message }`)
+        printLog.error(`error: ${ e.message }`)
         reject(e)
       })
 
