@@ -4,6 +4,28 @@
 通过脚手架工具microapp-ci执行预定义的脚本文件，实现根据commit msg生成版本信息，推送提测信息到相关群组。
 
 ### 安装
+----------
+建议在全局安装 microapp-ci
 ```
 npm i microapp-ci -g
 ```
+### 使用
+----------
+命令行使用
+```
+Usage: microapp-ci [options] [command]
+
+Options:
+  -V, --version   output the version number
+  -h, --help      display help for command
+
+Commands:
+  init            初始化发布配置文件
+  doctor          检查发布配置文件是否正确
+  open            构建完后自动打开开发者工具
+  upload          构建完后上传代码作为体验版
+  preview         构建完后作为开发版并生成预览二维码
+  help [command]  display help for command
+  
+```
+
