@@ -56,6 +56,8 @@ export interface SwanConfig {
     minSwanVersion?: string;
 }
 export interface DEPLOY_CONFIG_DATA {
+    /** 图片的image_key */
+    imgKey: string;
     /** 发布版本号，默认取 package.json 文件的 taroConfig.version 字段 */
     version: string;
     /** 版本发布描述， 默认取 package.json 文件的 taroConfig.desc 字段 */
