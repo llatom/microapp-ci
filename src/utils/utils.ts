@@ -1,4 +1,4 @@
-import { printLog } from './printLog';
+import { spinner } from './spinner';
 const { execSync } = require('child_process')
 const Dayjs = require('dayjs')
 const relativeTime = require('dayjs/plugin/relativeTime')
@@ -38,9 +38,9 @@ export function handleProgress(taskStatus) {
     msg = isWxmlTask ? `[Compile] ${msg}` : msg;
 
     if (taskStatus._status === 'done') {
-      printLog.success(msg);
+      spinner.success(msg);
     } else {
-      printLog.pending(msg);
+      spinner.pending(msg);
     }
   }
 }

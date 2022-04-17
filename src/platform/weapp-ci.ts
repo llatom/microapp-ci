@@ -7,7 +7,7 @@ import { Project } from 'miniprogram-ci'
 import * as ci from 'miniprogram-ci'
 import BaseCI from '../base-ci'
 import { handleProgress } from '../utils/utils'
-import { printLog } from '../utils/printLog'
+import { spinner } from '../utils/spinner'
 
 
 export default class WeappCI extends BaseCI {
@@ -44,7 +44,7 @@ export default class WeappCI extends BaseCI {
   async open() {
     // 检查安装路径是否存在
     if (!(await fs.existsSync(this.devToolsInstallPath))) {
-      printLog.error(`微信开发者工具安装路径不存在, ${this.devToolsInstallPath}`)
+      spinner.error(`微信开发者工具安装路径不存在, ${this.devToolsInstallPath}`)
       return
     }
     /** 命令行工具所在路径 */
@@ -64,30 +64,30 @@ export default class WeappCI extends BaseCI {
         : `/Library/Application Support/微信开发者工具/${md5}/Default/.ide-status`
     )
     if (!(await fs.existsSync(ideStatusFile))) {
-      printLog.error(errMesg)
+      spinner.error(errMesg)
       return
     }
     fs.readFile(ideStatusFile, 'utf8', (err, data) => {
       if (data === 'Off') {
-        printLog.error(errMesg)
+        spinner.error(errMesg)
         return
       }
     })
 
     if (!(await fs.existsSync(cliPath))) {
-      printLog.error(`${cliPath}命令行工具路径不存在`)
+      spinner.error(`${cliPath}命令行工具路径不存在`)
     }
-    printLog.pending('微信开发者工具...')
+    spinner.pending('微信开发者工具...')
     cp.exec(`${cliPath} open --project ${this.appPath}`, err => {
       if (err) {
-        printLog.error(err.message)
+        spinner.error(err.message)
       }
     })
   }
 
   async preview() {
     try {
-      printLog.info('上传开发版代码到微信后台并预览')
+      spinner.info('上传开发版代码到微信后台并预览')
       const uploadResult = await ci.preview({
         project: this.instance,
         version: this.version,
@@ -104,17 +104,17 @@ export default class WeappCI extends BaseCI {
         const allPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__FULL__')
         const mainPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__APP__')
         const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''}`
-        printLog.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
+        spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
     } catch (error:any) {
-      printLog.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
+      spinner.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
 
   async upload() {
     try {
-      printLog.info('上传体验版代码到微信后台')
-      printLog.info(`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
+      spinner.info('上传体验版代码到微信后台')
+      spinner.info(`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
       const uploadResult = await ci.upload({
         project: this.instance,
         version: this.version,
@@ -130,10 +130,10 @@ export default class WeappCI extends BaseCI {
         const allPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__FULL__')
         const mainPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__APP__')
         const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''}`
-        printLog.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
+        spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
     } catch (error:any) {
-      printLog.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
+      spinner.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
 }

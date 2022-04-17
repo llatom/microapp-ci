@@ -8474,7 +8474,7 @@
     "strip-ansi" "^5.2.0"
     "wcwidth" "^1.0.1"
 
-"ora@^4.0.0", "ora@^4.0.4", "ora@^4.0.5":
+"ora@^4.0.4", "ora@^4.0.5", "ora@^4.1.1":
   "integrity" "sha512-sjYP8QyVWBpBZWD6Vr1M/KwknSw6kJOz41tvGMlwWeClHBtYKTbHMki1PsLZnxKpXMPbTKv9b3pjQu3REib96A=="
   "resolved" "https://registry.npmjs.org/ora/-/ora-4.1.1.tgz"
   "version" "4.1.1"

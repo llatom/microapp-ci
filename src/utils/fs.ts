@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import DEFAULT_CONFIG_DATA from '../schemas/default-deploy-config.json'
-import { printLog } from './printLog'
+import { spinner } from './spinner'
 import { validateConfigData } from './json-schema'
 import DeployOptions from '../types/base-ci'
 
@@ -17,15 +17,15 @@ export function checkDeployConfigFile(rootDir: string): DeployOptions | null {
 
     // // 校验失败，数据不符合预期
     // if (!result.valid) {
-    //     printLog.error(`${CONFIG_FILE_NAME} check failed \n${result.errors.map((item) => item.toString()).join('\n')}`);
+    //     spinner.error(`${CONFIG_FILE_NAME} check failed \n${result.errors.map((item) => item.toString()).join('\n')}`);
     //     return null;
     // }
 
-    // printLog.success(`${CONFIG_FILE_NAME} check passed`);
+    // spinner.success(`${CONFIG_FILE_NAME} check passed`);
     return JSON.parse(data)
   } catch (err: any) {
-    printLog.error(err.message)
-    printLog.info(`请运行 "microapp-ci init"初始化配置文件`)
+    spinner.error(err.message)
+    spinner.info(`请运行 "microapp-ci init"初始化配置文件`)
     return null
   }
 }

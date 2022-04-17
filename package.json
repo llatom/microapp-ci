@@ -29,7 +29,7 @@
     "jsonschema": "^1.4.0",
     "miniprogram-ci": "^1.8.0",
     "miniu": "^2.1.0-alpha.0",
-    "ora": "^4.0.0",
+    "ora": "^4.1.1",
     "path": "^0.12.7",
     "request-promise": "^4.2.6",
     "shelljs": "^0.8.5",

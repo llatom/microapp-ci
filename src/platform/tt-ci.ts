@@ -3,12 +3,12 @@ import * as tt from 'tt-ide-cli'
 import * as cp from 'child_process'
 import * as fs from 'fs'
 import BaseCI from '../base-ci'
-import { printLog } from '../utils/printLog'
+import { spinner } from '../utils/spinner'
 
 export default class TTCI extends BaseCI {
   async _init() {
     if (this.deployConfig.tt == null) {
-      printLog.error('请为"microapp-ci"插件配置 "tt" 选项')
+      spinner.error('请为"microapp-ci"插件配置 "tt" 选项')
     }
   }
 
@@ -23,22 +23,22 @@ export default class TTCI extends BaseCI {
     const IDE_SCHEMA = 'bytedanceide:'
     const openCmd = isMac ? `open ${IDE_SCHEMA}` : `explorer ${IDE_SCHEMA}`
     if (fs.existsSync(projectPath)) {
-      printLog.info(`打开字节跳动小程序项目 ${projectPath}`)
+      spinner.info(`打开字节跳动小程序项目 ${projectPath}`)
       const openPath = `${openCmd}?path=${projectPath}`
       cp.exec(openPath, error => {
         if (!error) {
-          printLog.success(`打开IDE ${openPath} 成功`)
+          spinner.success(`打开IDE ${openPath} 成功`)
         } else {
-          printLog.error(`打开IDE失败, ${error}`)
+          spinner.error(`打开IDE失败, ${error}`)
         }
       })
     } else {
-      printLog.info(`打开IDE`)
+      spinner.info(`打开IDE`)
       cp.exec(openCmd, error => {
         if (!error) {
-          printLog.success('打开IDE成功')
+          spinner.success('打开IDE成功')
         } else {
-          printLog.error(`打开IDE失败, ${error}`)
+          spinner.error(`打开IDE失败, ${error}`)
         }
       })
     }
@@ -49,14 +49,14 @@ export default class TTCI extends BaseCI {
     const isLogin = await this._beforeCheck()
     if (!isLogin) return
     try {
-      printLog.info('预览字节跳动小程序')
+      spinner.info('预览字节跳动小程序')
       await tt.preview({
         entry: projectPath,
         force: true,
         small: true
       })
     } catch (error:any) {
-      printLog.error(`预览失败 ${new Date().toLocaleString()} \n${error.message}`)
+      spinner.error(`预览失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
 
@@ -65,15 +65,15 @@ export default class TTCI extends BaseCI {
     if (!isLogin) return
     const projectPath = this.deployConfig.tt.projectPath
     try {
-      printLog.info('上传代码到字节跳动后台')
-      printLog.info(`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
+      spinner.info('上传代码到字节跳动后台')
+      spinner.info(`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
       await tt.upload({
         entry: projectPath,
         version: this.version,
         changeLog: this.desc
       })
     } catch (error:any) {
-      printLog.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
+      spinner.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
 }

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import ora, { Ora } from 'ora';
 
-export class printLog {
+export class spinner {
     private static get spinner() {
         if (!this._spinner) {
             this._spinner = ora('').start();

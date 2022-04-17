@@ -63,7 +63,7 @@ export interface DEPLOY_CONFIG_DATA {
     /** 版本发布描述， 默认取 package.json 文件的 taroConfig.desc 字段 */
     desc: string;
     /** 打包平台，默认为weapp */
-    platform: string;
+    platforms: string;
     /** 飞书机器人webhookUrl 默认为'' */
     webhookUrl: string;
     /** 是否安装依赖 默认为false */
@@ -87,7 +87,7 @@ export default abstract class BaseCI {
     /** 当前发布内容的描述 */
     public desc: string;
     /** 当前发布的平台 */
-    public platform: string;
+    public platform: Array;
     /** 当前发布的环境 */
     public env: string;
     /** 飞书机器人webhookUrl */

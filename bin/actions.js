@@ -1,5 +1,5 @@
 const inquirer = require('inquirer')
-const { MiniAppCi } = require('../lib/index.js')
+const { MicroAppCi } = require('../lib/index.js')
 const { writeDeployConfigFile, checkDeployConfigFile } = require('../lib/utils/fs.js')
 const currentDir = process.cwd()
 
@@ -14,8 +14,8 @@ function doctorAction() {
 function openAction() {
   const previewQuestions = [
     {
-      type: 'list',
-      name: 'platform',
+      type: 'checkbox',
+      name: 'platforms',
       message: '请选择小程序平台',
       choices: [
         {
@@ -35,8 +35,8 @@ function openAction() {
           value: 'swan'
         },
         {
-          name: '全平台',
-          value: 'all'
+          name: '京东小程序',
+          value: 'jd'
         }
       ]
     },
@@ -58,16 +58,15 @@ function openAction() {
   ]
   inquirer.prompt(previewQuestions).then(result => {
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...result }
-    // new MiniAppCi(deployConfig, currentDir).preview()
-    new MiniAppCi(deployConfig).open()
+    new MicroAppCi(deployConfig).open()
   })
 }
 
 function previewAction() {
   const previewQuestions = [
     {
-      type: 'list',
-      name: 'platform',
+      type: 'checkbox',
+      name: 'platforms',
       message: '请选择小程序平台',
       choices: [
         {
@@ -87,8 +86,8 @@ function previewAction() {
           value: 'swan'
         },
         {
-          name: '全平台',
-          value: 'all'
+          name: '京东小程序',
+          value: 'jd'
         }
       ]
     },
@@ -110,16 +109,15 @@ function previewAction() {
   ]
   inquirer.prompt(previewQuestions).then(result => {
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...result }
-    // new MiniAppCi(deployConfig, currentDir).preview()
-    new MiniAppCi(deployConfig).preview()
+    new MicroAppCi(deployConfig).preview()
   })
 }
 
 function uploadAction() {
   const uploadQuestions = [
     {
-      type: 'list',
-      name: 'platform',
+      type: 'checkbox',
+      name: 'platforms',
       message: '请选择小程序平台',
       choices: [
         {
@@ -139,8 +137,8 @@ function uploadAction() {
           value: 'swan'
         },
         {
-          name: '全平台',
-          value: 'all'
+          name: '京东小程序',
+          value: 'jd'
         }
       ]
     },
@@ -159,8 +157,7 @@ function uploadAction() {
   ]
   inquirer.prompt(uploadQuestions).then(result => {
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...result }
-    // new MiniAppCi(deployConfig, currentDir).upload()
-    new MiniAppCi(deployConfig).upload()
+    new MicroAppCi(deployConfig).upload()
   })
 }
 

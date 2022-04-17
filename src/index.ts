@@ -1,56 +1,60 @@
 // /* eslint-disable no-console */
 import * as path from 'path'
 import fs from 'fs'
+import { spawn } from 'child_process'
+import rp from 'request-promise'
 import pushNotice from './notice/notice'
 import WeappCI from './platform/weapp-ci'
 import TTCI from './platform/tt-ci'
 import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
-import { printLog } from './utils/printLog'
+import { spinner } from './utils/spinner'
 import { DEPLOY_CONFIG_DATA } from './types/base-ci'
-const { spawn } = require('child_process')
-import rp from 'request-promise'
 
-
-export class MiniAppCi {
+export class MicroAppCi {
+  microappCiArr: any[]
   constructor(private deployConfig: DEPLOY_CONFIG_DATA) {
-    this._init(this.deployConfig)
+    this.microappCiArr = this._init(this.deployConfig)
   }
 
   _init(deployConfig) {
-    const platform = deployConfig.platform
-    let ci
-    switch (platform) {
-      case 'weapp':
-        ci = new WeappCI(deployConfig)
-        break
-      case 'tt':
-        ci = new TTCI(deployConfig)
-        break
-      case 'alipay':
-        ci = new AlipayCI(deployConfig)
-        break
-      case 'swan':
-        ci = new SwanCI(deployConfig)
-        break
-      default:
-        break
-    }
-    if (!ci) {
-      printLog.error(`"microapp-ci" 暂不支持 "${platform}" 平台`)
-      return
-    } else {
-      return ci
-    }
+    const platforms = deployConfig.platforms
+    let microappCiArr: Array<any> = []
+    platforms.forEach((platform) => {
+      let ci
+      switch (platform) {
+        case 'weapp':
+          ci = new WeappCI(deployConfig)
+          break
+        case 'tt':
+          ci = new TTCI(deployConfig)
+          break
+        case 'alipay':
+          ci = new AlipayCI(deployConfig)
+          break
+        case 'swan':
+          ci = new SwanCI(deployConfig)
+          break
+        default:
+          break
+      }
+      if (!ci) {
+        spinner.error(`"microapp-ci" 暂不支持 "${platform}" 平台`)
+        return
+      } else {
+        microappCiArr.push(ci)
+      }
+    });
+    return microappCiArr
   }
 
-  async build() {
-    const {env, platform} = this.deployConfig
-    const platformText = platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
-    printLog.pending(`正在编译${platformText}小程序，请稍后...`)
-    const logFilePath = path.join(process.cwd() , 'build_alipay.log')
-    const stream = fs.createWriteStream(logFilePath)
-    return new Promise<void>((resolve, reject) => {
+  async build(platforms, env) {
+    let tasks: Array<Promise<any>> = []
+    platforms.forEach((platform) => {
+      const logFilePath = path.join(process.cwd() , `build_${platform}.log`)
+      const stream = fs.createWriteStream(logFilePath)
+      const platformText = platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
+      spinner.pending(`正在编译${platformText}小程序，请稍后...`)
       const cmd = `taro build --type ${platform}`
       const proc = spawn('npx', cmd.split(' '), {
         env: {
@@ -58,60 +62,76 @@ export class MiniAppCi {
           ...env
         }
       })
-      proc.stdout.on('data', data => {
-        stream.write(data)
-      })
+      const promise = new Promise((resolve, reject) => {
+        proc.stdout.setEncoding('utf-8')
+        proc.stdout.on('data', (data: string) => {
+          let str = data
+          if (data && data.length > 50) {
+            str = data.substring(0, 50) + '...'
+          }
+          stream.write(data)
+          spinner.info(`[${platformText}]标准输出: -> ${str}`.trim())
+        })
+  
+        proc.stderr.setEncoding('utf-8')
+        proc.stderr.on('data', (data) => {
+          let str = data
+          if (data && data.length > 50) {
+            str = data.substring(0, 50) + '...'
+          }
+          stream.write(data)
+          spinner.info(`[${platformText}]标准输出: -> ${str}`.trim())
+        })
 
-      proc.stderr.on('data', data => {
-        stream.write(data)
+        proc.on('error', (e) => {
+          spinner.warn(`error: ${ e.message }`)
+          reject(e)
+        })
+  
+        proc.on('close', code => {
+          if (code !== 0) {
+            spinner.warn(`编译失败. 请查看日志 ${ logFilePath }`)
+            reject(`Exit code: ${ code }`)
+          } else {
+            spinner.success(`${cmd}编译完成！`)
+            resolve(code)
+          }
+        })
       })
-
-      proc.on('error', (e) => {
-        printLog.error(`error: ${ e.message }`)
-        reject(e)
-      })
-
-      proc.on('close', code => {
-        if (code !== 0) {
-          printLog.error(`Failed building. See ${ logFilePath }`)
-          reject(`Exit code: ${ code }`)
-        } else {
-          printLog.success('编译完成')
-          resolve()
-        }
-      })
+      tasks.push(promise)
     })
+  
+    await Promise.all(tasks)
   }
 
   async open() {
-    const ci = this._init(this.deployConfig)
-    ci.open()
+    this.microappCiArr.forEach((ci) => {
+      ci.open()
+    })
   }
 
   async upload() {
-    await this.build()
-    const ci = this._init(this.deployConfig)
-    ci.upload()
-    await this.pushNoticeMsg("", "", true)
+    await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
+    this.microappCiArr.forEach(async ci => {
+       ci.upload()
+    })
   }
 
   async preview() {
-    await this.build()
-    // await this.getTenantAccessToken()
-    const ci = this._init(this.deployConfig)
-    ci.preview()
-    // await this.uploadImage('./test.jpg')
-    await this.pushNoticeMsg(this.deployConfig.imgKey, false)
+    await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
+    this.microappCiArr.forEach(async ci => {
+      await ci.preview()
+    })
   }
 
   async pushNoticeMsg(imgKey, isExperience) {
     if (!imgKey) {
-      printLog.error('缺少二维码，不推送飞书消息')
+      spinner.error('缺少二维码，不推送飞书消息')
       return
     }
   
     if (!this.deployConfig.webhookUrl) {
-      printLog.error('缺少 webhookUrl 配置，不推送飞书 消息')
+      spinner.error('缺少 webhookUrl 配置，不推送飞书 消息')
       return
     }
   
@@ -142,7 +162,7 @@ export class MiniAppCi {
     if(result.code == 0) {
       return result.tenant_access_token
     }else{
-      printLog.error(result.msg)
+      spinner.error(result.msg)
     }
   }
 
@@ -169,7 +189,7 @@ export class MiniAppCi {
     if(content.code == 0) {
       return content
     }else{
-      printLog.error(content.msg)
+      spinner.error(content.msg)
     }
   }
 }

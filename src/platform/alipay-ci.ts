@@ -4,7 +4,7 @@ import * as path from 'path'
 import fs from 'fs'
 import BaseCI from '../base-ci'
 import generateQrCode from '../utils/qr-code'
-import { printLog } from '../utils/printLog'
+import { spinner } from '../utils/spinner'
 export default class AlipayCI extends BaseCI {
   protected _init(): void {
     if (this.deployConfig.alipay == null) {
@@ -24,24 +24,24 @@ export default class AlipayCI extends BaseCI {
   }
 
   open() {
-    printLog.error('阿里小程序不支持 "--open" 参数打开开发者工具')
+    spinner.error('阿里小程序不支持 "--open" 参数打开开发者工具')
   }
 
   async preview() {
-    printLog.pending(`正在生成支付宝小程序预览码，请稍后...`)
+    spinner.pending(`正在生成支付宝小程序预览码，请稍后...`)
     const previewResult = await miniu.miniPreview({
       project: this.deployConfig.alipay!.projectPath,
       appId: this.deployConfig.alipay!.appId,
       clientType: this.deployConfig.alipay!.clientType || 'alipay',
       qrcodeFormat: 'base64'
     })
-    printLog.info(`预览二维码地址： ${previewResult.packageQrcode}`)
+    spinner.info(`预览二维码地址： ${previewResult.packageQrcode}`)
     generateQrCode(previewResult.packageQrcode!)
   }
 
   async upload() {
     const clientType = this.deployConfig.alipay!.clientType || 'alipay'
-    printLog.info('上传代码到阿里小程序后台', clientType)
+    spinner.info('上传代码到阿里小程序后台', clientType)
     // 上传结果CI库本身有提示，故此不做异常处理
     // TODO 阿里的CI库上传时不能设置“禁止压缩”，所以上传时被CI二次压缩代码，可能会造成报错，这块暂时无法处理; SDK上传不支持设置描述信息
     const result = await miniu.miniUpload({
@@ -52,14 +52,14 @@ export default class AlipayCI extends BaseCI {
       experience: true,
       onProgressUpdate(info) {
         const { status, data } = info
-        printLog.info(`${status} ${data}`)
+        spinner.info(`${status} ${data}`)
       }
     })
     if (result.packages) {
       const allPackageInfo = result.packages.find(pkg => pkg.type === 'FULL')
       const mainPackageInfo = result.packages.find(item => item.type === 'MAIN')
       const extInfo = `本次上传${allPackageInfo!.size} ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size : ''}`
-      printLog.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
+      spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
     }
   }
 }
