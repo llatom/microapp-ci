@@ -41,7 +41,7 @@ export default class AlipayCI extends BaseCI {
 
   async upload() {
     const clientType = this.deployConfig.alipay!.clientType || 'alipay'
-    spinner.info('上传代码到阿里小程序后台', clientType)
+    spinner.info(`上传代码到阿里小程序后台${clientType}`)
     // 上传结果CI库本身有提示，故此不做异常处理
     // TODO 阿里的CI库上传时不能设置“禁止压缩”，所以上传时被CI二次压缩代码，可能会造成报错，这块暂时无法处理; SDK上传不支持设置描述信息
     const result = await miniu.miniUpload({

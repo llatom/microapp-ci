@@ -42,7 +42,7 @@ export class MicroAppCi {
         spinner.error(`"microapp-ci" 暂不支持 "${platform}" 平台`)
         return
       } else {
-        microappCiArr.push(ci)
+        microappCiArr.push({'platform': platform, 'ci': ci})
       }
     });
     return microappCiArr
@@ -105,26 +105,27 @@ export class MicroAppCi {
   }
 
   async open() {
-    this.microappCiArr.forEach((ci) => {
-      ci.open()
+    this.microappCiArr.forEach((item) => {
+      item.ci.open()
     })
   }
 
   async upload() {
     await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
-    this.microappCiArr.forEach(async ci => {
-       ci.upload()
+    this.microappCiArr.forEach(async item => {
+       item.ci.upload()
     })
   }
 
   async preview() {
     await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
-    this.microappCiArr.forEach(async ci => {
-      await ci.preview()
+    this.microappCiArr.forEach(async item => {
+      await item.ci.preview()
+      await this.pushNoticeMsg(this.deployConfig.imgKey, false, item.platform)
     })
   }
 
-  async pushNoticeMsg(imgKey, isExperience) {
+  async pushNoticeMsg(imgKey, isExperience, platform) {
     if (!imgKey) {
       spinner.error('缺少二维码，不推送飞书消息')
       return
@@ -138,8 +139,8 @@ export class MicroAppCi {
     const options = {
       imgKey,
       isExperience,
+      platform,
       webhookUrl: this.deployConfig.webhookUrl,
-      platform: this.deployConfig.platform
     }
     await pushNotice(options)
   }
@@ -149,8 +150,8 @@ export class MicroAppCi {
     var options = {
       uri: baseUrl,
       body: {
-        app_id: this.deployConfig.app_id,
-        app_secret: this.deployConfig.app_secret
+        app_id: this.deployConfig.feishu_app_id,
+        app_secret: this.deployConfig.feishu_app_secret
       },
       json: true,
       method: "POST",

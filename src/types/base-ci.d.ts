@@ -38,6 +38,7 @@ export declare type ClientType =
 /** 支付宝系列小程序配置 */
 export interface AlipayConfig {
     /** 小程序appId */
+    projectPath: string;
     appId: string;
     /** 工具id */
     toolId: string;
@@ -62,10 +63,14 @@ export interface DEPLOY_CONFIG_DATA {
     version: string;
     /** 版本发布描述， 默认取 package.json 文件的 taroConfig.desc 字段 */
     desc: string;
-    /** 打包平台，默认为weapp */
-    platforms: string;
+    /** 打包平台，默认为[] */
+    platforms: Array;
     /** 飞书机器人webhookUrl 默认为'' */
     webhookUrl: string;
+    /** 飞书应用 App Id */
+    feishu_app_id: string;
+    /** 飞书应用 App Secret */
+    feishu_app_secret:string
     /** 是否安装依赖 默认为false */
     npmInstall: string;
     /** 打包环境, 默认取env.config的 env字段 */
@@ -92,6 +97,10 @@ export default abstract class BaseCI {
     public env: string;
     /** 飞书机器人webhookUrl */
     public webhookUrl: string;
+    /** 飞书应用 App Id */
+    public feishu_app_id: string;
+    /** 飞书应用 App Secret */
+    public feishu_app_secret:string
     /** 是否安装依赖 */
     public npmInstall: boolean;
     /** 字节小程序CI配置 */
