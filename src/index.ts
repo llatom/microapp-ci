@@ -20,7 +20,7 @@ export class MicroAppCi {
   _init(deployConfig) {
     const platforms = deployConfig.platforms
     let microappCiArr: Array<any> = []
-    platforms.forEach((platform) => {
+    platforms.forEach(platform => {
       let ci
       switch (platform) {
         case 'weapp':
@@ -42,16 +42,16 @@ export class MicroAppCi {
         spinner.error(`"microapp-ci" 暂不支持 "${platform}" 平台`)
         return
       } else {
-        microappCiArr.push({'platform': platform, 'ci': ci})
+        microappCiArr.push({ platform: platform, ci: ci })
       }
-    });
+    })
     return microappCiArr
   }
 
   async build(platforms, env) {
     let tasks: Array<Promise<any>> = []
-    platforms.forEach((platform) => {
-      const logFilePath = path.join(process.cwd() , `build_${platform}.log`)
+    platforms.forEach(platform => {
+      const logFilePath = path.join(process.cwd(), `build_${platform}.log`)
       const stream = fs.createWriteStream(logFilePath)
       const platformText = platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
@@ -72,9 +72,9 @@ export class MicroAppCi {
           stream.write(data)
           spinner.info(`[${platformText}]标准输出: -> ${str}`.trim())
         })
-  
+
         proc.stderr.setEncoding('utf-8')
-        proc.stderr.on('data', (data) => {
+        proc.stderr.on('data', data => {
           let str = data
           if (data && data.length > 50) {
             str = data.substring(0, 50) + '...'
@@ -83,15 +83,15 @@ export class MicroAppCi {
           spinner.info(`[${platformText}]标准输出: -> ${str}`.trim())
         })
 
-        proc.on('error', (e) => {
-          spinner.warn(`error: ${ e.message }`)
+        proc.on('error', e => {
+          spinner.warn(`error: ${e.message}`)
           reject(e)
         })
-  
+
         proc.on('close', code => {
           if (code !== 0) {
-            spinner.warn(`编译失败. 请查看日志 ${ logFilePath }`)
-            reject(`Exit code: ${ code }`)
+            spinner.warn(`编译失败. 请查看日志 ${logFilePath}`)
+            reject(`Exit code: ${code}`)
           } else {
             spinner.success(`${cmd}编译完成！`)
             resolve(code)
@@ -100,12 +100,12 @@ export class MicroAppCi {
       })
       tasks.push(promise)
     })
-  
+
     await Promise.all(tasks)
   }
 
   async open() {
-    this.microappCiArr.forEach((item) => {
+    this.microappCiArr.forEach(item => {
       item.ci.open()
     })
   }
@@ -113,7 +113,7 @@ export class MicroAppCi {
   async upload() {
     await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
     this.microappCiArr.forEach(async item => {
-       item.ci.upload()
+      item.ci.upload()
     })
   }
 
@@ -130,17 +130,17 @@ export class MicroAppCi {
       spinner.error('缺少二维码，不推送飞书消息')
       return
     }
-  
+
     if (!this.deployConfig.webhookUrl) {
       spinner.error('缺少 webhookUrl 配置，不推送飞书 消息')
       return
     }
-  
+
     const options = {
       imgKey,
       isExperience,
       platform,
-      webhookUrl: this.deployConfig.webhookUrl,
+      webhookUrl: this.deployConfig.webhookUrl
     }
     await pushNotice(options)
   }
@@ -154,15 +154,15 @@ export class MicroAppCi {
         app_secret: this.deployConfig.feishu_app_secret
       },
       json: true,
-      method: "POST",
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
-      },
+        'content-type': 'application/json'
+      }
     }
     const result = await rp(options)
-    if(result.code == 0) {
+    if (result.code == 0) {
       return result.tenant_access_token
-    }else{
+    } else {
       spinner.error(result.msg)
     }
   }
@@ -173,13 +173,13 @@ export class MicroAppCi {
     var options = {
       uri: baseUrl,
       data: {
-        "image_type": "message",
-        "image": qr_img_url
+        image_type: 'message',
+        image: qr_img_url
       },
       json: true,
-      method: "POST",
+      method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       },
       stream: true
     }
@@ -187,9 +187,9 @@ export class MicroAppCi {
     const resp = await rp(options)
     resp.raise_for_status()
     const content = resp.json()
-    if(content.code == 0) {
+    if (content.code == 0) {
       return content
-    }else{
+    } else {
       spinner.error(content.msg)
     }
   }

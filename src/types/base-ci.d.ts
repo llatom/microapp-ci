@@ -16,6 +16,7 @@ export interface WeappConfig {
 }
 /** 字节小程序配置 */
 export interface TTConfig {
+    projectPath: any;
     /** 绑定的邮箱账号 */
     email: string;
     /** 密码 */
@@ -52,6 +53,7 @@ export interface AlipayConfig {
 /** 百度小程序配置 */
 export interface SwanConfig {
     /** 有该小程序发布权限的登录密钥 */
+    projectPath: any;
     token: string;
     /** 最低基础库版本, 不传默认为 3.350.6 */
     minSwanVersion?: string;

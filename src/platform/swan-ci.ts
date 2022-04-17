@@ -18,24 +18,24 @@ export default class SwanCI extends BaseCI {
   }
 
   async preview() {
-    const outputPath = this.deployConfig.alipay.projectPath
+    const outputPath = this.deployConfig.swan.projectPath
     spinner.info('预览百度小程序')
     shell.exec(
-      `${this.swanBin} preview --project-path ${outputPath} --token ${this.deployConfig.swan!.token} --min-swan-version ${
-        this.deployConfig.swan!.minSwanVersion || '3.350.6'
+      `${this.swanBin} preview --p ${outputPath} --token ${this.deployConfig.swan.token} --min-swan-version ${
+        this.deployConfig.swan.minSwanVersion || '3.350.6'
       } --json`,
       (_code, stdout, stderr) => {
         if (!stderr) {
           stdout = JSON.parse(stdout)
-          spinner.info(`在线预览地址： ${stdout.list[0].url}`)
-          generateQrCode(stdout.list[0].url)
+          spinner.info(`在线预览地址： ${stdout['list'][0].url}`)
+          generateQrCode(stdout['list'][0].url)
         }
       }
     )
   }
 
   async upload() {
-    const outputPath = this.deployConfig.alipay.projectPath
+    const outputPath = this.deployConfig.swan.projectPath
     spinner.info('上传体验版代码到百度后台')
     spinner.info(`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
     shell.exec(

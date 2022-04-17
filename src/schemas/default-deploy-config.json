@@ -21,7 +21,8 @@
   "swan": {
     "token": "鉴权需要的token令牌",
     "enable": "开启/关闭构建",
-    "projectPath": "项目构建目录"
+    "projectPath": "项目构建目录",
+    "minSwanVersion": "对应版本基础库"
   },
   "imgKey": "预览二维码上传飞书后返回的key",
   "env": "编译需要用的环境变量",

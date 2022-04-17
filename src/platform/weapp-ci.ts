@@ -9,13 +9,10 @@ import BaseCI from '../base-ci'
 import { handleProgress } from '../utils/utils'
 import { spinner } from '../utils/spinner'
 
-
 export default class WeappCI extends BaseCI {
   private instance: Project
   /** 微信开发者安装路径 */
-  | undefined
-  /** 微信开发者安装路径 */
-  private devToolsInstallPath: string | undefined
+  private devToolsInstallPath: string = ''
 
   _init() {
     if (this.deployConfig.weapp == null) {
@@ -25,7 +22,6 @@ export default class WeappCI extends BaseCI {
       this.deployConfig.weapp.devToolsInstallPath ||
       (process.platform === 'darwin' ? '/Applications/wechatwebdevtools.app' : 'C:\\Program Files (x86)\\Tencent\\微信web开发者工具')
     delete this.deployConfig.weapp.devToolsInstallPath
-
 
     const weappConfig: any = {
       type: 'miniProgram',
@@ -107,7 +103,7 @@ export default class WeappCI extends BaseCI {
         const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''}`
         spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
-    } catch (error:any) {
+    } catch (error: any) {
       spinner.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
@@ -133,7 +129,7 @@ export default class WeappCI extends BaseCI {
         const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''}`
         spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
-    } catch (error:any) {
+    } catch (error: any) {
       spinner.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
   }
