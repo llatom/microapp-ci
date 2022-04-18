@@ -20,14 +20,16 @@ export default class WeappCI extends BaseCI {
     }
     this.devToolsInstallPath =
       this.deployConfig.weapp.devToolsInstallPath ||
-      (process.platform === 'darwin' ? '/Applications/wechatwebdevtools.app' : 'C:\\Program Files (x86)\\Tencent\\微信web开发者工具')
+      (process.platform === 'darwin'
+        ? '/Applications/wechatwebdevtools.app'
+        : 'C:\\Program Files (x86)\\Tencent\\微信web开发者工具')
     delete this.deployConfig.weapp.devToolsInstallPath
 
     const weappConfig: any = {
       type: 'miniProgram',
       projectPath: this.deployConfig.weapp.projectPath || this.appPath,
       ignores: ['node_modules/**/*'],
-      ...this.deployConfig.weapp!
+      ...this.deployConfig.weapp!,
     }
     const privateKeyPath = path.isAbsolute(weappConfig.privateKeyPath)
       ? weappConfig.privateKeyPath
@@ -45,7 +47,10 @@ export default class WeappCI extends BaseCI {
       return
     }
     /** 命令行工具所在路径 */
-    const cliPath = path.join(this.devToolsInstallPath, os.platform() === 'win32' ? '/cli.bat' : '/Contents/MacOS/cli')
+    const cliPath = path.join(
+      this.devToolsInstallPath,
+      os.platform() === 'win32' ? '/cli.bat' : '/Contents/MacOS/cli'
+    )
     const isWindows = os.platform() === 'win32'
 
     // 检查是否开启了命令行
@@ -53,7 +58,8 @@ export default class WeappCI extends BaseCI {
       '工具的服务端口已关闭。要使用命令行调用工具，请打开工具 -> 设置 -> 安全设置，将服务端口开启。详细信息: https://developers.weixin.qq.com/miniprogram/dev/devtools/cli.html'
     const installPath = isWindows ? this.devToolsInstallPath : `${this.devToolsInstallPath}/Contents/MacOS`
     const md5 = require('crypto').createHash('md5').update(installPath).digest('hex')
-    const USER_HOME: string = process.platform === 'win32' ? process.env.HOMEPATH ?? '' : process.env?.HOME ?? ''
+    const USER_HOME: string =
+      process.platform === 'win32' ? process.env.HOMEPATH ?? '' : process.env?.HOME ?? ''
     const ideStatusFile = path.join(
       USER_HOME,
       isWindows
@@ -75,7 +81,7 @@ export default class WeappCI extends BaseCI {
       spinner.error(`${cliPath}命令行工具路径不存在`)
     }
     spinner.pending('微信开发者工具...')
-    cp.exec(`${cliPath} open --project ${this.appPath}`, err => {
+    cp.exec(`${cliPath} open --project ${this.appPath}`, (err) => {
       if (err) {
         spinner.error(err.message)
       }
@@ -91,16 +97,18 @@ export default class WeappCI extends BaseCI {
         desc: this.desc,
         setting: {
           ...this.instance,
-          minify: true
+          minify: true,
         },
         onProgressUpdate: handleProgress,
-        threads: os.cpus.length
+        threads: os.cpus.length,
       })
 
       if (uploadResult.subPackageInfo) {
-        const allPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__FULL__')
-        const mainPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__APP__')
-        const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''}`
+        const allPackageInfo = uploadResult.subPackageInfo.find((item) => item.name === '__FULL__')
+        const mainPackageInfo = uploadResult.subPackageInfo.find((item) => item.name === '__APP__')
+        const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${
+          mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''
+        }`
         spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
     } catch (error: any) {
@@ -118,15 +126,17 @@ export default class WeappCI extends BaseCI {
         desc: this.desc,
         setting: {
           ...this.instance,
-          minify: true
+          minify: true,
         },
         onProgressUpdate: handleProgress,
-        threads: os.cpus.length
+        threads: os.cpus.length,
       })
       if (uploadResult.subPackageInfo) {
-        const allPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__FULL__')
-        const mainPackageInfo = uploadResult.subPackageInfo.find(item => item.name === '__APP__')
-        const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''}`
+        const allPackageInfo = uploadResult.subPackageInfo.find((item) => item.name === '__FULL__')
+        const mainPackageInfo = uploadResult.subPackageInfo.find((item) => item.name === '__APP__')
+        const extInfo = `本次上传${allPackageInfo!.size / 1024}kb ${
+          mainPackageInfo ? ',其中主包' + mainPackageInfo.size + 'kb' : ''
+        }`
         spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
     } catch (error: any) {

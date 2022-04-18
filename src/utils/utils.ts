@@ -1,4 +1,4 @@
-import { spinner } from './spinner';
+import { spinner } from './spinner'
 const { execSync } = require('child_process')
 const Dayjs = require('dayjs')
 const relativeTime = require('dayjs/plugin/relativeTime')
@@ -7,7 +7,7 @@ Dayjs.locale('zh-cn')
 Dayjs.extend(relativeTime)
 const MAX_COMMIT_NUM = 3 //commit 数量
 
-export function getLatestCommitMsg(cwd){
+export function getLatestCommitMsg(cwd) {
   const options = { cwd }
   try {
     let commitMsgs = execSync(
@@ -17,9 +17,7 @@ export function getLatestCommitMsg(cwd){
       .toString()
       .trim()
     commitMsgs = replaceDate(commitMsgs)
-    const branchName = execSync('git rev-parse --abbrev-ref HEAD', options)
-      .toString()
-      .trim()
+    const branchName = execSync('git rev-parse --abbrev-ref HEAD', options).toString().trim()
     return `当前分支: ${branchName}
 最近${MAX_COMMIT_NUM}次commit:
 ${commitMsgs}`
@@ -29,18 +27,17 @@ ${commitMsgs}`
   }
 }
 
-
 export function handleProgress(taskStatus) {
-  let msg = taskStatus._msg;
+  let msg = taskStatus._msg
 
   if (msg) {
-    const isWxmlTask = /(\/|json|wxss|wxml|js)/.test(msg);
-    msg = isWxmlTask ? `[Compile] ${msg}` : msg;
+    const isWxmlTask = /(\/|json|wxss|wxml|js)/.test(msg)
+    msg = isWxmlTask ? `[Compile] ${msg}` : msg
 
     if (taskStatus._status === 'done') {
-      spinner.success(msg);
+      spinner.success(msg)
     } else {
-      spinner.pending(msg);
+      spinner.pending(msg)
     }
   }
 }
@@ -58,19 +55,18 @@ export function getBase64Image(img) {
 
 export function dataURLtoBlob(baseurl) {
   let arr = baseurl.split(','),
-  mime = arr[0].match(/:(.*?);/)[1],
-  bstr = atob(arr[1]),
-  n = bstr.length,
-  u8arr = new Uint8Array(n)
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n)
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n)
   }
   return new Blob([u8arr], { type: mime })
 }
 
-const replaceDate = message => {
-  return message.replace(/#DATE<([^>]+)>/gi, function(_, p1) {
+const replaceDate = (message) => {
+  return message.replace(/#DATE<([^>]+)>/gi, function (_, p1) {
     return new Dayjs(p1).fromNow()
   })
 }
-

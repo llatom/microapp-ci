@@ -31,7 +31,9 @@ export function checkDeployConfigFile(rootDir: string): DeployOptions | null {
 }
 
 export function writeDeployConfigFile(rootDir: string) {
-  fs.writeFileSync(path.join(rootDir, CONFIG_FILE_NAME), JSON.stringify(DEFAULT_CONFIG_DATA, null, 2), { encoding: 'utf-8' })
+  fs.writeFileSync(path.join(rootDir, CONFIG_FILE_NAME), JSON.stringify(DEFAULT_CONFIG_DATA, null, 2), {
+    encoding: 'utf-8',
+  })
 }
 
 export function getProjectConfig(miniprogramWorkspack: string) {

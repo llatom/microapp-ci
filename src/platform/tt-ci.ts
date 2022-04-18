@@ -35,7 +35,7 @@ export default class TTCI extends BaseCI {
     if (fs.existsSync(projectPath)) {
       spinner.info(`打开字节跳动小程序项目 ${projectPath}`)
       const openPath = `${openCmd}?path=${projectPath}`
-      cp.exec(openPath, error => {
+      cp.exec(openPath, (error) => {
         if (!error) {
           spinner.success(`打开IDE ${openPath} 成功`)
         } else {
@@ -44,7 +44,7 @@ export default class TTCI extends BaseCI {
       })
     } else {
       spinner.info(`打开IDE`)
-      cp.exec(openCmd, error => {
+      cp.exec(openCmd, (error) => {
         if (!error) {
           spinner.success('打开IDE成功')
         } else {
@@ -62,23 +62,23 @@ export default class TTCI extends BaseCI {
       spinner.info('预览字节跳动小程序')
       const previewResult: ProjectQRCode = await tma.preview({
         project: {
-          path: projectPath // 项目地址
+          path: projectPath, // 项目地址
         },
         page: {
           path: '', // 小程序打开页面
           query: '', // 小程序打开 query
           scene: '', // 小程序打开场景值
           launchFrom: '', // 小程序打开场景（未知可填空字符串）
-          location: '' // 小程序打开位置（未知可填空字符串）
+          location: '', // 小程序打开位置（未知可填空字符串）
         },
         qrcode: {
           format: 'terminal', // imageSVG | imageFile | null | terminal
           options: {
-            small: true // 使用小二维码，主要用于 terminal
-          }
+            small: true, // 使用小二维码，主要用于 terminal
+          },
         },
         cache: false, // 是否使用缓存
-        copyToClipboard: true // 是否将产出的二维码链接复制到剪切板
+        copyToClipboard: true, // 是否将产出的二维码链接复制到剪切板
       })
       spinner.success(`二维码预览地址 ${previewResult.shortUrl}`)
     } catch (error: any) {
@@ -95,19 +95,19 @@ export default class TTCI extends BaseCI {
       spinner.info(`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
       const uploadResult: ProjectQRCode = await tma.upload({
         project: {
-          path: projectPath // 项目地址
+          path: projectPath, // 项目地址
         },
         qrcode: {
           format: 'terminal', // imageSVG | imageFile | null | terminal
           output: '', // 只在 imageFile 生效，填写图片输出绝对路径
           options: {
-            small: false // 使用小二维码，主要用于 terminal
-          }
+            small: false, // 使用小二维码，主要用于 terminal
+          },
         },
         copyToClipboard: true, // 是否将产出的二维码链接复制到剪切板
         changeLog: this.desc, // 上传描述
         version: this.version, // 上传版本号
-        needUploadSourcemap: true // 是否上传后生成 sourcemap，推荐使用 true，否则开发者后台解析错误时将不能展示原始代码
+        needUploadSourcemap: true, // 是否上传后生成 sourcemap，推荐使用 true，否则开发者后台解析错误时将不能展示原始代码
       })
       spinner.success(`二维码预览地址 ${uploadResult.shortUrl}`)
     } catch (error: any) {

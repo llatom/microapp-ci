@@ -39,9 +39,11 @@ export default class SwanCI extends BaseCI {
     spinner.info('上传体验版代码到百度后台')
     spinner.info(`本次上传版本号为："${this.version}"，上传描述为：“${this.desc}”`)
     shell.exec(
-      `${this.swanBin} upload --project-path ${outputPath} --token ${this.deployConfig.swan!.token} --release-version ${
-        this.version
-      } --min-swan-version ${this.deployConfig.swan!.minSwanVersion || '3.350.6'} --desc ${this.desc} --json`,
+      `${this.swanBin} upload --project-path ${outputPath} --token ${
+        this.deployConfig.swan!.token
+      } --release-version ${this.version} --min-swan-version ${
+        this.deployConfig.swan!.minSwanVersion || '3.350.6'
+      } --desc ${this.desc} --json`,
       (_code, _stdout, stderr) => {
         if (!stderr) {
           spinner.success(`上传成功 ${new Date().toLocaleString()}`)

@@ -11,7 +11,9 @@ export default class AlipayCI extends BaseCI {
       throw new Error('请为"microapp-ci"插件配置 "alipay" 选项')
     }
     const { toolId, privateKeyPath: _privateKeyPath, proxy } = this.deployConfig.alipay
-    const privateKeyPath = path.isAbsolute(_privateKeyPath) ? _privateKeyPath : path.join(this.appPath, _privateKeyPath)
+    const privateKeyPath = path.isAbsolute(_privateKeyPath)
+      ? _privateKeyPath
+      : path.join(this.appPath, _privateKeyPath)
     if (!fs.existsSync(privateKeyPath)) {
       throw new Error(`"alipay.privateKeyPath"选项配置的路径不存在,本次上传终止:${privateKeyPath}`)
     }
@@ -19,7 +21,7 @@ export default class AlipayCI extends BaseCI {
     miniu.setConfig({
       toolId,
       privateKey: fs.readFileSync(privateKeyPath, 'utf-8'),
-      proxy
+      proxy,
     })
   }
 
@@ -33,7 +35,7 @@ export default class AlipayCI extends BaseCI {
       project: this.deployConfig.alipay!.projectPath,
       appId: this.deployConfig.alipay!.appId,
       clientType: this.deployConfig.alipay!.clientType || 'alipay',
-      qrcodeFormat: 'base64'
+      qrcodeFormat: 'base64',
     })
     spinner.info(`预览二维码地址： ${previewResult.packageQrcode}`)
     generateQrCode(previewResult.packageQrcode!)
@@ -53,12 +55,14 @@ export default class AlipayCI extends BaseCI {
       onProgressUpdate(info) {
         const { status, data } = info
         spinner.info(`${status} ${data}`)
-      }
+      },
     })
     if (result.packages) {
-      const allPackageInfo = result.packages.find(pkg => pkg.type === 'FULL')
-      const mainPackageInfo = result.packages.find(item => item.type === 'MAIN')
-      const extInfo = `本次上传${allPackageInfo!.size} ${mainPackageInfo ? ',其中主包' + mainPackageInfo.size : ''}`
+      const allPackageInfo = result.packages.find((pkg) => pkg.type === 'FULL')
+      const mainPackageInfo = result.packages.find((item) => item.type === 'MAIN')
+      const extInfo = `本次上传${allPackageInfo!.size} ${
+        mainPackageInfo ? ',其中主包' + mainPackageInfo.size : ''
+      }`
       spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
     }
   }

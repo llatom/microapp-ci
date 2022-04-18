@@ -20,7 +20,7 @@ export class MicroAppCi {
   _init(deployConfig) {
     const platforms = deployConfig.platforms
     let microappCiArr: Array<any> = []
-    platforms.forEach(platform => {
+    platforms.forEach((platform) => {
       let ci
       switch (platform) {
         case 'weapp':
@@ -50,17 +50,18 @@ export class MicroAppCi {
 
   async build(platforms, env) {
     let tasks: Array<Promise<any>> = []
-    platforms.forEach(platform => {
+    platforms.forEach((platform) => {
       const logFilePath = path.join(process.cwd(), `build_${platform}.log`)
       const stream = fs.createWriteStream(logFilePath)
-      const platformText = platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
+      const platformText =
+        platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
       const cmd = `taro build --type ${platform}`
       const proc = spawn('npx', cmd.split(' '), {
         env: {
           ...process.env,
-          ...env
-        }
+          ...env,
+        },
       })
       const promise = new Promise((resolve, reject) => {
         proc.stdout.setEncoding('utf-8')
@@ -74,7 +75,7 @@ export class MicroAppCi {
         })
 
         proc.stderr.setEncoding('utf-8')
-        proc.stderr.on('data', data => {
+        proc.stderr.on('data', (data) => {
           let str = data
           if (data && data.length > 50) {
             str = data.substring(0, 50) + '...'
@@ -83,12 +84,12 @@ export class MicroAppCi {
           spinner.info(`[${platformText}]标准输出: -> ${str}`.trim())
         })
 
-        proc.on('error', e => {
+        proc.on('error', (e) => {
           spinner.warn(`error: ${e.message}`)
           reject(e)
         })
 
-        proc.on('close', code => {
+        proc.on('close', (code) => {
           if (code !== 0) {
             spinner.warn(`编译失败. 请查看日志 ${logFilePath}`)
             reject(`Exit code: ${code}`)
@@ -105,21 +106,21 @@ export class MicroAppCi {
   }
 
   async open() {
-    this.microappCiArr.forEach(item => {
+    this.microappCiArr.forEach((item) => {
       item.ci.open()
     })
   }
 
   async upload() {
     await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
-    this.microappCiArr.forEach(async item => {
+    this.microappCiArr.forEach(async (item) => {
       item.ci.upload()
     })
   }
 
   async preview() {
     await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
-    this.microappCiArr.forEach(async item => {
+    this.microappCiArr.forEach(async (item) => {
       await item.ci.preview()
       await this.pushNoticeMsg(this.deployConfig.imgKey, false, item.platform)
     })
@@ -140,7 +141,7 @@ export class MicroAppCi {
       imgKey,
       isExperience,
       platform,
-      webhookUrl: this.deployConfig.webhookUrl
+      webhookUrl: this.deployConfig.webhookUrl,
     }
     await pushNotice(options)
   }
@@ -151,13 +152,13 @@ export class MicroAppCi {
       uri: baseUrl,
       body: {
         app_id: this.deployConfig.feishu_app_id,
-        app_secret: this.deployConfig.feishu_app_secret
+        app_secret: this.deployConfig.feishu_app_secret,
       },
       json: true,
       method: 'POST',
       headers: {
-        'content-type': 'application/json'
-      }
+        'content-type': 'application/json',
+      },
     }
     const result = await rp(options)
     if (result.code == 0) {
@@ -174,14 +175,14 @@ export class MicroAppCi {
       uri: baseUrl,
       data: {
         image_type: 'message',
-        image: qr_img_url
+        image: qr_img_url,
       },
       json: true,
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      stream: true
+      stream: true,
     }
 
     const resp = await rp(options)
