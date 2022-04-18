@@ -10,9 +10,9 @@ import { handleProgress } from '../utils/utils'
 import { spinner } from '../utils/spinner'
 
 export default class WeappCI extends BaseCI {
-  private instance: Project
+  private instance!: Project
   /** 微信开发者安装路径 */
-  private devToolsInstallPath: string = ''
+  private devToolsInstallPath = ''
 
   _init() {
     if (this.deployConfig.weapp == null) {
