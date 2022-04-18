@@ -43,7 +43,7 @@ export default class TTCI extends BaseCI {
         }
       })
     } else {
-      spinner.info(`打开IDE`)
+      spinner.info('打开IDE')
       cp.exec(openCmd, (error) => {
         if (!error) {
           spinner.success('打开IDE成功')

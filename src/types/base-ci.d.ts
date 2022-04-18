@@ -23,7 +23,8 @@ export interface TTConfig {
   password: string
 }
 /** 终端类型 */
-export declare type ClientType = /** 支付宝 */
+export declare type ClientType =
+  /** 支付宝 */
   | 'alipay'
   /** AMPE */
   | 'ampe'

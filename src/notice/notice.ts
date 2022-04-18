@@ -57,7 +57,7 @@ async function pushNotice(
   await sendWebhook()
   async function sendWebhook() {
     const baseUrl = webhookUrl
-    var options = {
+    const options = {
       method: 'POST',
       uri: baseUrl,
       body: {

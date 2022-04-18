@@ -9,10 +9,11 @@
   "scripts": {
     "start": "tsc --watch",
     "build": "tsc",
+    "lint": "npx eslint --ext .ts, src",
+    "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier \"**/*.{ts,md,json}\"",
     "prettier:check": "npm run prettier -- --check",
-    "prettier:fix": "npm run prettier -- --write",
-    "lint": "eslint --ext .ts, src"
+    "prettier:fix": "npm run prettier -- --write"
   },
   "repository": {
     "type": "git",

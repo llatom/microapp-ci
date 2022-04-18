@@ -25,7 +25,7 @@ export function checkDeployConfigFile(rootDir: string): DeployOptions | null {
     return JSON.parse(data)
   } catch (err: any) {
     spinner.error(err.message)
-    spinner.info(`请运行 "microapp-ci init"初始化配置文件`)
+    spinner.info('请运行 "microapp-ci init"初始化配置文件')
     return null
   }
 }

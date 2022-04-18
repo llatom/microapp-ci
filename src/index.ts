@@ -19,7 +19,7 @@ export class MicroAppCi {
 
   _init(deployConfig) {
     const platforms = deployConfig.platforms
-    let microappCiArr: Array<any> = []
+    const microappCiArr: Array<any> = []
     platforms.forEach((platform) => {
       let ci
       switch (platform) {
@@ -49,7 +49,7 @@ export class MicroAppCi {
   }
 
   async build(platforms, env) {
-    let tasks: Array<Promise<any>> = []
+    const tasks: Array<Promise<any>> = []
     platforms.forEach((platform) => {
       const logFilePath = path.join(process.cwd(), `build_${platform}.log`)
       const stream = fs.createWriteStream(logFilePath)
@@ -148,7 +148,7 @@ export class MicroAppCi {
 
   async getTenantAccessToken() {
     const baseUrl = 'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal'
-    var options = {
+    const options = {
       uri: baseUrl,
       body: {
         app_id: this.deployConfig.feishu_app_id,
@@ -171,7 +171,7 @@ export class MicroAppCi {
   async uploadImage(qr_img_url) {
     const baseUrl = 'https://open.feishu.cn/open-apis/image/v4/put/'
     const token = await this.getTenantAccessToken()
-    var options = {
+    const options = {
       uri: baseUrl,
       data: {
         image_type: 'message',
