@@ -8,7 +8,11 @@
   },
   "scripts": {
     "start": "tsc --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "prettier": "prettier \"**/*.{ts,md,json}\"",
+    "prettier:check": "npm run prettier -- --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "lint": "eslint --ext .ts, src"
   },
   "repository": {
     "type": "git",
@@ -31,6 +35,7 @@
     "miniu": "^2.1.0-alpha.0",
     "ora": "^4.1.1",
     "path": "^0.12.7",
+    "prettier": "^2.6.2",
     "request-promise": "^4.2.6",
     "shelljs": "^0.8.5",
     "swan-toolkit": "^3.5.67",
@@ -39,6 +44,11 @@
   "devDependencies": {
     "@types/node": "^17.0.23",
     "@types/shelljs": "^0.8.11",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/parser": "^5.19.0",
+    "eslint": "^8.13.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "typescript": "^4.6.3",
     "typescript-json-schema": "^0.53.0"
   },
