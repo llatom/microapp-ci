@@ -99,6 +99,8 @@ export default class WeappCI extends BaseCI {
           ...this.instance,
           minify: true,
         },
+        qrcodeFormat: 'image',
+        qrcodeOutputDest: `${this.deployConfig.weapp.projectPath}/preview.jpg`,
         onProgressUpdate: handleProgress,
         threads: os.cpus.length,
       })

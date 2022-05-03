@@ -35,7 +35,8 @@ export default class AlipayCI extends BaseCI {
       project: this.deployConfig.alipay!.projectPath,
       appId: this.deployConfig.alipay!.appId,
       clientType: this.deployConfig.alipay!.clientType || 'alipay',
-      qrcodeFormat: 'base64',
+      qrcodeFormat: 'image',
+      qrcodeOutput: `${this.deployConfig.weapp.projectPath}/preview.jpg`,
     })
     spinner.info(`预览二维码地址： ${previewResult.packageQrcode}`)
     generateQrCode(previewResult.packageQrcode!)

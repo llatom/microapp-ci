@@ -72,7 +72,8 @@ export default class TTCI extends BaseCI {
           location: '', // 小程序打开位置（未知可填空字符串）
         },
         qrcode: {
-          format: 'terminal', // imageSVG | imageFile | null | terminal
+          format: 'imageFile', // imageSVG | imageFile | null | terminal
+          output: `${this.deployConfig.weapp.projectPath}/preview.jpg`, // 只在 imageFile 生效，填写图片输出绝对路径
           options: {
             small: true, // 使用小二维码，主要用于 terminal
           },
@@ -98,8 +99,8 @@ export default class TTCI extends BaseCI {
           path: projectPath, // 项目地址
         },
         qrcode: {
-          format: 'terminal', // imageSVG | imageFile | null | terminal
-          output: '', // 只在 imageFile 生效，填写图片输出绝对路径
+          format: 'imageFile', // imageSVG | imageFile | null | terminal
+          output: `${this.deployConfig.weapp.projectPath}/beta.jpg`, // 只在 imageFile 生效，填写图片输出绝对路径
           options: {
             small: false, // 使用小二维码，主要用于 terminal
           },
