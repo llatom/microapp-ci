@@ -42,29 +42,6 @@ export function handleProgress(taskStatus) {
   }
 }
 
-export function getBase64Image(img) {
-  const canvas = document.createElement('canvas')
-  canvas.width = img.width
-  canvas.height = img.height
-  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-  ctx.drawImage(img, 0, 0, img.width, img.height)
-  const ext = img.src.substring(img.src.lastIndexOf('.') + 1).toLowerCase()
-  const dataURL = canvas.toDataURL('image/' + ext)
-  return dataURL
-}
-
-export function dataURLtoBlob(baseurl) {
-  let arr = baseurl.split(','),
-    mime = arr[0].match(/:(.*?);/)[1],
-    bstr = atob(arr[1]),
-    n = bstr.length,
-    u8arr = new Uint8Array(n)
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
-  }
-  return new Blob([u8arr], { type: mime })
-}
-
 const replaceDate = (message) => {
   return message.replace(/#DATE<([^>]+)>/gi, function (_, p1) {
     return new Dayjs(p1).fromNow()

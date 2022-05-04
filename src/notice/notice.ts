@@ -11,15 +11,13 @@ async function pushNotice(
     platform: '',
   }
 ) {
-  const { imgKey, isExperience, webhookUrl, platform } = options
+  const { imgKey, isExperience, webhookUrl } = options
   const qrImg = imgKey
   const gitInfo = getLatestCommitMsg(process.cwd())
-  const platformText =
-    platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
   const uploadType = isExperience ? '体验版' : '预览版'
   const postBody = {
     zh_cn: {
-      title: `${platformText}${uploadType}小程序构建完成`,
+      title: `${uploadType}小程序构建完成`,
       content: [
         [
           {

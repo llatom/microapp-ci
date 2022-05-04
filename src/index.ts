@@ -1,5 +1,7 @@
 // /* eslint-disable no-console */
 import * as path from 'path'
+import * as fse from 'fs-extra'
+import archiver from 'archiver'
 import fs from 'fs'
 import { spawn } from 'child_process'
 import rp from 'request-promise'
@@ -10,6 +12,11 @@ import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
 import { spinner } from './utils/spinner'
 import { DEPLOY_CONFIG_DATA } from './types/base-ci'
+const Dayjs = require('dayjs')
+
+type Platforms = 'weapp' | 'alipay' | 'tt' | 'jd' | 'swan'
+type DirsMap = Map<Platforms, string>
+const tempDir = '.temp'
 
 export class MicroAppCi {
   microappCiArr: any[]
@@ -116,17 +123,104 @@ export class MicroAppCi {
     this.microappCiArr.forEach(async (item) => {
       item.ci.upload()
     })
+    const zipDirs = await this.getSourceDirections(this.deployConfig.platforms)
+    const zipFile = await this.zipDir(zipDirs)
+    spinner.success(`zip打包完成，zip位置：${zipFile}`)
+    await this.pushNoticeMsg(this.deployConfig.imgKey, true)
   }
 
   async preview() {
     await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
     this.microappCiArr.forEach(async (item) => {
       await item.ci.preview()
-      await this.pushNoticeMsg(this.deployConfig.imgKey, false, item.platform)
+    })
+    const zipDirs = await this.getSourceDirections(this.deployConfig.platforms)
+    const zipFile = await this.zipDir(zipDirs)
+    spinner.success(`zip打包完成，zip位置：${zipFile}`)
+    await this.pushNoticeMsg(this.deployConfig.imgKey, false)
+  }
+
+  /** 打包对应平台dist目录到zip */
+  async zipDir(dirsMap: DirsMap) {
+    if (!dirsMap.size) {
+      return Promise.reject('打包目录为空')
+    }
+
+    const archive = archiver('zip', {
+      zlib: { level: 9 },
+    })
+    const platformsAll = [] as string[]
+
+    for (const [platform, dir] of dirsMap) {
+      platformsAll.push(platform)
+      archive.directory(path.resolve(dir), platform)
+    }
+    const zipName = `mp${new Dayjs().format('MM-DD-HH')}(${platformsAll.join('_')})_${
+      this.deployConfig.version
+    }.zip`
+
+    const tempDirAbs = path.resolve(tempDir)
+    if (!fse.existsSync(tempDirAbs)) {
+      fse.ensureDirSync(tempDirAbs)
+    }
+
+    const zipFile = path.join(tempDirAbs, zipName)
+
+    if (fse.existsSync(zipFile)) {
+      fse.removeSync(zipFile)
+    }
+
+    const output = fse.createWriteStream(zipFile)
+
+    // @ts-ignore
+    archive.pipe(output)
+
+    return new Promise((resolve, reject) => {
+      output.on('close', () => resolve(zipFile))
+      output.on('end', () => {})
+      archive.on('error', function (err) {
+        spinner.error(err.stack)
+        reject(err)
+        process.exit(1)
+      })
+
+      archive.finalize()
     })
   }
 
-  async pushNoticeMsg(imgKey, isExperience, platform) {
+  /** 校验dist下平台代码目录是否存在 */
+  async getSourceDirections(platforms: Platforms[]) {
+    let i = 0
+    const notExists = [] as unknown as [string[]]
+    const mapDirs = new Map<Platforms, string>()
+
+    while (i < platforms.length) {
+      const platform = platforms[i++]
+      const dir = path.resolve('dist', platform)
+      if (!fse.existsSync(dir)) {
+        notExists.push([platform, dir])
+        continue
+      } else {
+        mapDirs.set(platform, dir)
+      }
+    }
+
+    if (notExists.length > 0) {
+      const str = notExists
+        .map(([p, d]) => {
+          return `${spinner.info(p)}`
+        })
+        .join(', ')
+      console.log(
+        spinner.error(`平台[ ${str} ]构建的目录不存在，请保证提前build了该平台代码，或者选择zip前需要build`)
+      )
+      process.exit(1)
+    }
+
+    return mapDirs
+  }
+
+  async pushNoticeMsg(imgKey, isExperience) {
     if (!imgKey) {
       spinner.error('缺少二维码，不推送飞书消息')
       return
@@ -140,7 +234,6 @@ export class MicroAppCi {
     const options = {
       imgKey,
       isExperience,
-      platform,
       webhookUrl: this.deployConfig.webhookUrl,
     }
     await pushNotice(options)
