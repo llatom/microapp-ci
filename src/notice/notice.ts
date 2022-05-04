@@ -8,7 +8,6 @@ async function pushNotice(
     imgKey: '',
     isExperience: true,
     webhookUrl: '',
-    platform: '',
   }
 ) {
   const { imgKey, isExperience, webhookUrl } = options
