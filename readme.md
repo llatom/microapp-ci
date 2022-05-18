@@ -31,6 +31,8 @@ Commands:
   open            构建完后自动打开开发者工具
   upload          构建完后上传代码作为体验版
   preview         构建完后作为开发版并生成预览二维码
+  upload:all      自动完成多平台构建上传体验版
+  preview:all     自动完成多平台构建预览
   help [command]  display help for command
 
 ```
