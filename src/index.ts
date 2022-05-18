@@ -124,7 +124,7 @@ export class MicroAppCi {
       item.ci.upload()
     })
     const zipDirs = await this.getSourceDirections(this.deployConfig.platforms)
-    const zipFile = await this.zipDir(zipDirs)
+    const zipFile = await this.createZipArchive(zipDirs)
     spinner.success(`zip打包完成，zip位置：${zipFile}`)
     await this.pushNoticeMsg(this.deployConfig.imgKey, true)
   }
@@ -135,13 +135,13 @@ export class MicroAppCi {
       await item.ci.preview()
     })
     const zipDirs = await this.getSourceDirections(this.deployConfig.platforms)
-    const zipFile = await this.zipDir(zipDirs)
+    const zipFile = await this.createZipArchive(zipDirs)
     spinner.success(`zip打包完成，zip位置：${zipFile}`)
     await this.pushNoticeMsg(this.deployConfig.imgKey, false)
   }
 
   /** 打包对应平台dist目录到zip */
-  async zipDir(dirsMap: DirsMap) {
+  async createZipArchive(dirsMap: DirsMap) {
     if (!dirsMap.size) {
       return Promise.reject('打包目录为空')
     }

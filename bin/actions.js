@@ -20,25 +20,25 @@ function openAction() {
       choices: [
         {
           name: '微信小程序',
-          value: 'weapp'
+          value: 'weapp',
         },
         {
           name: '支付宝小程序',
-          value: 'alipay'
+          value: 'alipay',
         },
         {
           name: '字节小程序',
-          value: 'tt'
+          value: 'tt',
         },
         {
           name: '百度小程序',
-          value: 'swan'
+          value: 'swan',
         },
         {
           name: '京东小程序',
-          value: 'jd'
-        }
-      ]
+          value: 'jd',
+        },
+      ],
     },
     {
       type: 'list',
@@ -47,16 +47,16 @@ function openAction() {
       choices: [
         {
           name: '测试环境',
-          value: 'test'
+          value: 'test',
         },
         {
           name: '生产环境',
-          value: 'prod'
-        }
-      ]
-    }
+          value: 'prod',
+        },
+      ],
+    },
   ]
-  inquirer.prompt(previewQuestions).then(result => {
+  inquirer.prompt(previewQuestions).then((result) => {
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...result }
     new MicroAppCi(deployConfig).open()
   })
@@ -71,25 +71,25 @@ function previewAction() {
       choices: [
         {
           name: '微信小程序',
-          value: 'weapp'
+          value: 'weapp',
         },
         {
           name: '支付宝小程序',
-          value: 'alipay'
+          value: 'alipay',
         },
         {
           name: '字节小程序',
-          value: 'tt'
+          value: 'tt',
         },
         {
           name: '百度小程序',
-          value: 'swan'
+          value: 'swan',
         },
         {
           name: '京东小程序',
-          value: 'jd'
-        }
-      ]
+          value: 'jd',
+        },
+      ],
     },
     {
       type: 'list',
@@ -98,16 +98,16 @@ function previewAction() {
       choices: [
         {
           name: '测试环境',
-          value: 'test'
+          value: 'test',
         },
         {
           name: '生产环境',
-          value: 'prod'
-        }
-      ]
-    }
+          value: 'prod',
+        },
+      ],
+    },
   ]
-  inquirer.prompt(previewQuestions).then(result => {
+  inquirer.prompt(previewQuestions).then((result) => {
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...result }
     new MicroAppCi(deployConfig).preview()
   })
@@ -122,43 +122,59 @@ function uploadAction() {
       choices: [
         {
           name: '微信小程序',
-          value: 'weapp'
+          value: 'weapp',
         },
         {
           name: '支付宝小程序',
-          value: 'alipay'
+          value: 'alipay',
         },
         {
           name: '字节小程序',
-          value: 'tt'
+          value: 'tt',
         },
         {
           name: '百度小程序',
-          value: 'swan'
+          value: 'swan',
         },
         {
           name: '京东小程序',
-          value: 'jd'
-        }
-      ]
+          value: 'jd',
+        },
+      ],
     },
     {
       type: 'input',
       name: 'version',
       message: '请输入自定义发布版本号, 默认取package.json中的version字段',
-      default: ''
+      default: '',
     },
     {
       type: 'input',
       name: 'desc',
       message: '请输入自定义发布备注, 默认取最近一次git commit message',
-      default: ''
-    }
+      default: '',
+    },
   ]
-  inquirer.prompt(uploadQuestions).then(result => {
+  inquirer.prompt(uploadQuestions).then((result) => {
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...result }
     new MicroAppCi(deployConfig).upload()
   })
+}
+
+function previewAllAction() {
+  const previewConfig = { platforms: ['weapp', 'alipay', 'tt', 'swan', 'jd'], env: 'test' }
+  const deployConfig = { ...checkDeployConfigFile(currentDir), ...previewConfig }
+  new MicroAppCi(deployConfig).preview()
+}
+
+function uploadAllAction() {
+  const uploadConfig = {
+    platforms: ['weapp', 'alipay', 'tt', 'swan', 'jd'],
+    version: '',
+    desc: '',
+  }
+  const deployConfig = { ...checkDeployConfigFile(currentDir), ...uploadConfig }
+  new MicroAppCi(deployConfig).upload()
 }
 
 module.exports = {
@@ -166,5 +182,7 @@ module.exports = {
   doctorAction,
   openAction,
   previewAction,
-  uploadAction
+  uploadAction,
+  previewAllAction,
+  uploadAllAction,
 }
