@@ -1,6 +1,9 @@
 # microapp-ci
 
-> Taro 小程序端构建后支持 CI（持续集成）的脚手架， 集成微信，支付宝，百度，字节 CI（持续集成）的插件，支持构建完毕后自动打开小程序开发这个工具、上传作为体验版、生成预览二维码。通过脚手架工具 microapp-ci 执行预定义的脚本文件，实现根据 commit msg 生成版本信息，推送提测信息到相关群组。
+> microapp-ci 是在taro提供的插件[taro-plugin-mini-ci][1]基础上实现的CI/CD工具,目前暂时仅支持微信、字节、支付宝、百度小程序。
+ 
+ - 支持构建完毕后自动打开小程序开发这个工具、上传作为体验版、生成预览二维码
+ - 通过命令行工具 microapp-ci 执行预定义的脚本文件，根据 commit msg 生成版本信息，通过webhook推送提测信息到相关（飞书，钉钉）群组。
 
 ### 安装
 
@@ -36,3 +39,6 @@ Commands:
   help [command]  display help for command
 
 ```
+
+
+  [1]: https://github.com/NervJS/taro/tree/next/packages/taro-plugin-mini-ci
