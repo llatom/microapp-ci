@@ -6,6 +6,10 @@
   "bin": {
     "microapp-ci": "bin/index.js"
   },
+  "files": [
+    "bin",
+    "lib"
+  ],
   "scripts": {
     "start": "tsc --watch",
     "build": "tsc",
@@ -41,6 +45,7 @@
     "prettier": "^2.6.2",
     "request-promise": "^4.2.6",
     "shelljs": "^0.8.5",
+    "simple-git": "^3.7.1",
     "swan-toolkit": "^3.5.67",
     "tt-ide-cli": "^0.1.9"
   },

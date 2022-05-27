@@ -12,11 +12,10 @@ import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
 import { spinner } from './utils/spinner'
 import { DEPLOY_CONFIG_DATA } from './types/base-ci'
-const Dayjs = require('dayjs')
 
 type Platforms = 'weapp' | 'alipay' | 'tt' | 'jd' | 'swan'
 type DirsMap = Map<Platforms, string>
-const tempDir = '.temp'
+const tempDir = 'dist'
 
 export class MicroAppCi {
   microappCiArr: any[]
@@ -155,9 +154,7 @@ export class MicroAppCi {
       platformsAll.push(platform)
       archive.directory(path.resolve(dir), platform)
     }
-    const zipName = `mp${new Dayjs().format('MM-DD-HH')}(${platformsAll.join('_')})_${
-      this.deployConfig.version
-    }.zip`
+    const zipName = `mp(${platformsAll.join('_')})_${this.deployConfig.version}.zip`
 
     const tempDirAbs = path.resolve(tempDir)
     if (!fse.existsSync(tempDirAbs)) {

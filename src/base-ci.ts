@@ -1,5 +1,4 @@
 import fs from 'fs'
-import { getLatestCommitMsg } from './utils/utils'
 import DEPLOY_CONFIG_DATA from './types/base-ci'
 import * as path from 'path'
 
