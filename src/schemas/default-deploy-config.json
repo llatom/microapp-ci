@@ -24,12 +24,18 @@
     "projectPath": "项目构建目录",
     "minSwanVersion": "对应版本基础库"
   },
+  "noticeCardConfig": {
+    "buildUrl": "小程序构建包下载地址",
+    "wechatQrCodeUrl": "微信小程序二维码访问地址",
+    "alipayQrCodeUrl": "支付宝小程序二维码访问地址",
+    "swanQrCodeUrl": "百度小程序二维码访问地址",
+    "ttQrCodeUrl": "字节小程序二维码访问地址",
+    "jdQrCodeUrl": "京东小程序二维码访问地址"
+  },
   "imgKey": "预览二维码上传飞书后返回的key",
   "env": "编译需要用的环境变量",
   "npmInstall": "是否安装依赖",
   "webhookUrl": "构建成功后的webhook回调地址",
-  "feishu_app_id": "飞书应用App Id",
-  "feishu_app_secret": "飞书应用App Secret",
   "version": "1.0.0",
   "desc": "版本描述"
 }

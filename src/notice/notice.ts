@@ -1,20 +1,38 @@
 import rp from 'request-promise'
-import { getLatestCommitMsg } from '../utils/utils'
+import { getLatestCommitMsg, getActionName } from '../utils/utils'
 const { execSync } = require('child_process')
 const Dayjs = require('dayjs')
 const HOSTNAME = require('os').hostname()
 
 async function pushNotice(
   options = {
-    imgKey: '',
+    noticeCardConfig: {},
     isExperience: true,
     webhookUrl: '',
   }
 ) {
-  const { imgKey, isExperience, webhookUrl } = options
+  const { noticeCardConfig, isExperience, webhookUrl } = options
   const branchName = execSync('git rev-parse --abbrev-ref HEAD', options).toString().trim()
   const commitMsgs = await getLatestCommitMsg(process.cwd())
   const uploadType = isExperience ? '体验版' : '预览版'
+  const cardAction = [] as any[]
+  for (const key of Object.keys(noticeCardConfig)) {
+    const action = noticeCardConfig[key]
+    if (action) {
+      const actionName = getActionName(key, isExperience)
+      const noticeAction = {
+        tag: 'button',
+        text: {
+          content: actionName,
+          tag: 'plain_text',
+        },
+        url: action,
+        type: 'primary',
+        value: {},
+      }
+      cardAction.push(noticeAction)
+    }
+  }
   const cardBody = {
     elements: [
       {
@@ -68,38 +86,7 @@ async function pushNotice(
         tag: 'div',
       },
       {
-        actions: [
-          {
-            tag: 'button',
-            text: {
-              content: '点击下载构建包',
-              tag: 'plain_text',
-            },
-            url: '',
-            type: 'primary',
-            value: {},
-          },
-          // {
-          //   tag: 'button',
-          //   text: {
-          //     content: '点击查看微信体验码',
-          //     tag: 'plain_text',
-          //   },
-          //   url: '',
-          //   type: 'primary',
-          //   value: {},
-          // },
-          // {
-          //   tag: 'button',
-          //   text: {
-          //     content: '点击查看京东体验码',
-          //     tag: 'plain_text',
-          //   },
-          //   url: '',
-          //   type: 'primary',
-          //   value: {},
-          // },
-        ],
+        actions: cardAction,
         tag: 'action',
       },
     ],

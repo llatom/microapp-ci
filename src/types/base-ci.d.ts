@@ -70,6 +70,21 @@ export interface SwanConfig {
   /** 最低基础库版本, 不传默认为 3.350.6 */
   minSwanVersion?: string
 }
+
+export interface noticeCardConfig {
+  /** 小程序构建包下载地址 */
+  buildUrl: string
+  /** 微信小程序二维码访问地址 */
+  wechatQrCodeUrl: string
+  /** 支付宝小程序二维码访问地址 */
+  alipayQrCodeUrl: string
+  /** 百度小程序二维码访问地址 */
+  swanQrCodeUrl: string
+  /** 字节小程序二维码访问地址 */
+  ttQrCodeUrl: string
+  /** 京东小程序二维码访问地址 */
+  jdQrCodeUrl: string
+}
 export interface DEPLOY_CONFIG_DATA {
   /** 图片的image_key */
   imgKey: string
@@ -81,10 +96,8 @@ export interface DEPLOY_CONFIG_DATA {
   platforms: Array
   /** 飞书机器人webhookUrl 默认为'' */
   webhookUrl: string
-  /** 飞书应用 App Id */
-  feishu_app_id: string
-  /** 飞书应用 App Secret */
-  feishu_app_secret: string
+  /** 推送消息卡片配置 */
+  noticeCardConfig: noticeCardConfig
   /** 是否安装依赖 默认为false */
   npmInstall: string
   /** 打包环境, 默认取env.config的 env字段 */
@@ -111,10 +124,8 @@ export default abstract class BaseCI {
   public env: string
   /** 飞书机器人webhookUrl */
   public webhookUrl: string
-  /** 飞书应用 App Id */
-  public feishu_app_id: string
-  /** 飞书应用 App Secret */
-  public feishu_app_secret: string
+  /** 推送消息卡片配置 */
+  noticeCardConfig: noticeCardConfig
   /** 是否安装依赖 */
   public npmInstall: boolean
   /** 字节小程序CI配置 */

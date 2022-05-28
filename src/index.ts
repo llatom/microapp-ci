@@ -4,7 +4,6 @@ import * as fse from 'fs-extra'
 import archiver from 'archiver'
 import fs from 'fs'
 import { spawn } from 'child_process'
-import rp from 'request-promise'
 import pushNotice from './notice/notice'
 import WeappCI from './platform/weapp-ci'
 import TTCI from './platform/tt-ci'
@@ -118,25 +117,31 @@ export class MicroAppCi {
   }
 
   async upload() {
+    const noticeCardConfig = this.deployConfig.noticeCardConfig
     await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
     this.microappCiArr.forEach(async (item) => {
       item.ci.upload()
     })
     const zipDirs = await this.getSourceDirections(this.deployConfig.platforms)
-    const zipFile = await this.createZipArchive(zipDirs)
+    const zipFile = (await this.createZipArchive(zipDirs)) as string
     spinner.success(`zip打包完成，zip位置：${zipFile}`)
-    await this.pushNoticeMsg(this.deployConfig.imgKey, true)
+    const zipName = zipFile.length > 1 ? zipFile.substring(zipFile.indexOf('mp'), zipFile.length) : ''
+    noticeCardConfig.buildUrl = `${noticeCardConfig.buildUrl}${zipName}`
+    await this.pushNoticeMsg(noticeCardConfig, true)
   }
 
   async preview() {
+    const noticeCardConfig = this.deployConfig.noticeCardConfig
     await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
     this.microappCiArr.forEach(async (item) => {
       await item.ci.preview()
     })
     const zipDirs = await this.getSourceDirections(this.deployConfig.platforms)
-    const zipFile = await this.createZipArchive(zipDirs)
+    const zipFile = (await this.createZipArchive(zipDirs)) as string
     spinner.success(`zip打包完成，zip位置：${zipFile}`)
-    await this.pushNoticeMsg(this.deployConfig.imgKey, false)
+    const zipName = zipFile.length > 1 ? zipFile.substring(zipFile.indexOf('mp'), zipFile.length) : ''
+    noticeCardConfig.buildUrl = `${noticeCardConfig.buildUrl}${zipName}`
+    await this.pushNoticeMsg(noticeCardConfig, false)
   }
 
   /** 打包对应平台dist目录到zip */
@@ -217,71 +222,17 @@ export class MicroAppCi {
     return mapDirs
   }
 
-  async pushNoticeMsg(imgKey, isExperience) {
-    if (!imgKey) {
-      spinner.error('缺少二维码，不推送飞书消息')
-      return
-    }
-
+  async pushNoticeMsg(noticeCardConfig, isExperience) {
     if (!this.deployConfig.webhookUrl) {
       spinner.error('缺少 webhookUrl 配置，不推送飞书 消息')
       return
     }
 
     const options = {
-      imgKey,
+      noticeCardConfig,
       isExperience,
       webhookUrl: this.deployConfig.webhookUrl,
     }
     await pushNotice(options)
-  }
-
-  async getTenantAccessToken() {
-    const baseUrl = 'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal'
-    const options = {
-      uri: baseUrl,
-      body: {
-        app_id: this.deployConfig.feishu_app_id,
-        app_secret: this.deployConfig.feishu_app_secret,
-      },
-      json: true,
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-    }
-    const result = await rp(options)
-    if (result.code == 0) {
-      return result.tenant_access_token
-    } else {
-      spinner.error(result.msg)
-    }
-  }
-
-  async uploadImage(qr_img_url) {
-    const baseUrl = 'https://open.feishu.cn/open-apis/image/v4/put/'
-    const token = await this.getTenantAccessToken()
-    const options = {
-      uri: baseUrl,
-      data: {
-        image_type: 'message',
-        image: qr_img_url,
-      },
-      json: true,
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      stream: true,
-    }
-
-    const resp = await rp(options)
-    resp.raise_for_status()
-    const content = resp.json()
-    if (content.code == 0) {
-      return content
-    } else {
-      spinner.error(content.msg)
-    }
   }
 }
