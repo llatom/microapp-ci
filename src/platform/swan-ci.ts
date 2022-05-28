@@ -29,6 +29,7 @@ export default class SwanCI extends BaseCI {
           stdout = JSON.parse(stdout)
           spinner.info(`在线预览地址： ${stdout['list'][0].url}`)
           generateQrCode(stdout['list'][0].url)
+          this.deployConfig.noticeCardConfig.swanQrCodeUrl = stdout['list'][0].url
         }
       }
     )
@@ -47,6 +48,7 @@ export default class SwanCI extends BaseCI {
       (_code, _stdout, stderr) => {
         if (!stderr) {
           spinner.success(`上传成功 ${new Date().toLocaleString()}`)
+          this.deployConfig.noticeCardConfig.swanQrCodeUrl = JSON.parse(_stdout)['schemeUrl']
         }
       }
     )

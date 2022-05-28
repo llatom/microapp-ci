@@ -82,6 +82,7 @@ export default class TTCI extends BaseCI {
         copyToClipboard: true, // 是否将产出的二维码链接复制到剪切板
       })
       spinner.success(`二维码预览地址 ${previewResult.shortUrl}`)
+      return previewResult.shortUrl
     } catch (error: any) {
       spinner.error(`预览失败 ${new Date().toLocaleString()} \n${error.message}`)
     }
@@ -111,6 +112,7 @@ export default class TTCI extends BaseCI {
         needUploadSourcemap: true, // 是否上传后生成 sourcemap，推荐使用 true，否则开发者后台解析错误时将不能展示原始代码
       })
       spinner.success(`二维码预览地址 ${uploadResult.shortUrl}`)
+      return uploadResult.shortUrl
     } catch (error: any) {
       spinner.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
     }

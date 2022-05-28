@@ -99,6 +99,8 @@ export default class WeappCI extends BaseCI {
           ...this.instance,
           minify: true,
         },
+        qrcodeFormat: 'image',
+        qrcodeOutputDest: './dist/weapp_preview.jpg',
         onProgressUpdate: handleProgress,
         threads: os.cpus.length,
       })
@@ -111,8 +113,11 @@ export default class WeappCI extends BaseCI {
         }`
         spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
+      const qrCodeUrl = `${this.deployConfig.deployBaseUrl}weapp_preview.jpg`
+      return qrCodeUrl
     } catch (error: any) {
       spinner.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
+      return ''
     }
   }
 
@@ -139,8 +144,10 @@ export default class WeappCI extends BaseCI {
         }`
         spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
       }
+      return this.deployConfig.defaultWeappQrUrl
     } catch (error: any) {
       spinner.error(`上传失败 ${new Date().toLocaleString()} \n${error.message}`)
+      return ''
     }
   }
 }

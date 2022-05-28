@@ -36,10 +36,11 @@ export default class AlipayCI extends BaseCI {
       appId: this.deployConfig.alipay!.appId,
       clientType: this.deployConfig.alipay!.clientType || 'alipay',
       qrcodeFormat: 'image',
-      qrcodeOutput: `${this.deployConfig.weapp.projectPath}/preview.jpg`,
+      qrcodeOutput: './dist/alipay_preview.jpg',
     })
     spinner.info(`预览二维码地址： ${previewResult.packageQrcode}`)
     generateQrCode(previewResult.packageQrcode!)
+    return previewResult.packageQrcode
   }
 
   async upload() {
@@ -66,5 +67,6 @@ export default class AlipayCI extends BaseCI {
       }`
       spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
     }
+    return result.qrCodeUrl
   }
 }

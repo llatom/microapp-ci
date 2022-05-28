@@ -117,31 +117,47 @@ export class MicroAppCi {
   }
 
   async upload() {
-    const noticeCardConfig = this.deployConfig.noticeCardConfig
-    await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
+    const deployConfig = this.deployConfig
+    const noticeCardConfig = deployConfig.noticeCardConfig
+    if (deployConfig.platforms.includes('jd')) {
+      noticeCardConfig.jdQrCodeUrl = deployConfig.defaultJdQrUrl
+    }
+    await this.build(deployConfig?.platforms, deployConfig?.env)
     this.microappCiArr.forEach(async (item) => {
-      item.ci.upload()
+      item.ci.upload().then((e) => {
+        noticeCardConfig[`${item.platform}QrCodeUrl`] = e
+      })
     })
-    const zipDirs = await this.getSourceDirections(this.deployConfig.platforms)
+    const zipDirs = await this.getSourceDirections(deployConfig.platforms)
     const zipFile = (await this.createZipArchive(zipDirs)) as string
     spinner.success(`zip打包完成，zip位置：${zipFile}`)
     const zipName = zipFile.length > 1 ? zipFile.substring(zipFile.indexOf('mp'), zipFile.length) : ''
     noticeCardConfig.buildUrl = `${noticeCardConfig.buildUrl}${zipName}`
-    await this.pushNoticeMsg(noticeCardConfig, true)
+    setTimeout(async () => {
+      this.pushNoticeMsg(noticeCardConfig, true)
+    }, 20000)
   }
 
   async preview() {
-    const noticeCardConfig = this.deployConfig.noticeCardConfig
-    await this.build(this.deployConfig?.platforms, this.deployConfig?.env)
+    const deployConfig = this.deployConfig
+    const noticeCardConfig = deployConfig.noticeCardConfig
+    if (deployConfig.platforms.includes('jd')) {
+      noticeCardConfig.jdQrCodeUrl = deployConfig.defaultJdQrUrl
+    }
+    await this.build(deployConfig?.platforms, deployConfig?.env)
     this.microappCiArr.forEach(async (item) => {
-      await item.ci.preview()
+      await item.ci.preview().then((e) => {
+        noticeCardConfig[`${item.platform}QrCodeUrl`] = e
+      })
     })
-    const zipDirs = await this.getSourceDirections(this.deployConfig.platforms)
+    const zipDirs = await this.getSourceDirections(deployConfig.platforms)
     const zipFile = (await this.createZipArchive(zipDirs)) as string
     spinner.success(`zip打包完成，zip位置：${zipFile}`)
     const zipName = zipFile.length > 1 ? zipFile.substring(zipFile.indexOf('mp'), zipFile.length) : ''
     noticeCardConfig.buildUrl = `${noticeCardConfig.buildUrl}${zipName}`
-    await this.pushNoticeMsg(noticeCardConfig, false)
+    setTimeout(async () => {
+      this.pushNoticeMsg(noticeCardConfig, false)
+    }, 20000)
   }
 
   /** 打包对应平台dist目录到zip */

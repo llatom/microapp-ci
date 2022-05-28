@@ -30,7 +30,7 @@ export function getActionName(action, isExperience) {
     case 'buildUrl':
       actionName = '点击下载小程序构建包'
       break
-    case 'wechatQrCodeUrl':
+    case 'weappQrCodeUrl':
       actionName = `查看微信小程序${qrCodeType}`
       break
     case 'alipayQrCodeUrl':

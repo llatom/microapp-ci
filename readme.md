@@ -30,7 +30,7 @@ Options:
 
 Commands:
   init            初始化发布配置文件
-  doctor          检查发布配置文件是否正确
+  doctor          检查发布配置文件是否正确[TODO]
   open            构建完后自动打开开发者工具
   upload          构建完后上传代码作为体验版
   preview         构建完后作为开发版并生成预览二维码

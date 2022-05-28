@@ -75,7 +75,7 @@ export interface noticeCardConfig {
   /** 小程序构建包下载地址 */
   buildUrl: string
   /** 微信小程序二维码访问地址 */
-  wechatQrCodeUrl: string
+  weappQrCodeUrl: string
   /** 支付宝小程序二维码访问地址 */
   alipayQrCodeUrl: string
   /** 百度小程序二维码访问地址 */
@@ -86,8 +86,6 @@ export interface noticeCardConfig {
   jdQrCodeUrl: string
 }
 export interface DEPLOY_CONFIG_DATA {
-  /** 图片的image_key */
-  imgKey: string
   /** 发布版本号，默认取 package.json 文件的 taroConfig.version 字段 */
   version: string
   /** 版本发布描述， 默认取 package.json 文件的 taroConfig.desc 字段 */
@@ -98,6 +96,8 @@ export interface DEPLOY_CONFIG_DATA {
   webhookUrl: string
   /** 推送消息卡片配置 */
   noticeCardConfig: noticeCardConfig
+  /** 京东小程序体验码默认地址 */
+  defaultJdQrUrl: string
   /** 是否安装依赖 默认为false */
   npmInstall: string
   /** 打包环境, 默认取env.config的 env字段 */
@@ -116,6 +116,10 @@ export default abstract class BaseCI {
   protected deployConfig: DEPLOY_CONFIG_DATA
   /** 当前要发布的版本号 */
   public version: string
+  /** base url */
+  public deployBaseUrl: string
+  /** 微信体验码默认地址 */
+  public defaultWeappQrUrl: string
   /** 当前发布内容的描述 */
   public desc: string
   /** 当前发布的平台 */
