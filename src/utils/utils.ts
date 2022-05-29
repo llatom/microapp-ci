@@ -1,6 +1,56 @@
 import { spinner } from './spinner'
 import simpleGit from 'simple-git'
 
+/**
+ * 获取buildEnv： preview | upload
+ */
+export function getBuildAction() {
+  const { argv } = process
+  const allowBuildAction = ['preview', 'upload']
+  const idxParam = argv.indexOf('--buildAction')
+
+  const buildction = argv[idxParam + 1]
+  if (buildction && allowBuildAction.includes(buildction)) {
+    return buildction
+  }
+  return allowBuildAction[0]
+}
+
+/**
+ * 获取buildEnv： weapp | weqy | alipay | swan | tt | jd
+ */
+export function getBuildPlatform() {
+  const { argv } = process
+  const allowBuildPlatform = ['weapp', 'weqy', 'alipay', 'swan', 'tt', 'jd']
+  const idxParam = argv.indexOf('--type')
+
+  const input = argv[idxParam + 1]
+  const platforms = input.split(',')
+  if (platforms.length > 0) {
+    for (const platform of platforms) {
+      if (allowBuildPlatform.includes(platform)) {
+        return platforms
+      }
+    }
+  }
+  return allowBuildPlatform[0]
+}
+
+/**
+ * 获取buildEnv： test | prod
+ */
+export function getBuildEnv() {
+  const { argv } = process
+  const allowBuildEnv = ['test', 'prod']
+  const idxParam = argv.indexOf('--buildEnv')
+
+  const env = argv[idxParam + 1]
+  if (env && allowBuildEnv.includes(env)) {
+    return env
+  }
+  return allowBuildEnv[0]
+}
+
 export async function getLatestCommitMsg(baseDir: string) {
   const git = simpleGit(baseDir)
 
@@ -36,14 +86,14 @@ export function getActionName(action, isExperience) {
     case 'alipayQrCodeUrl':
       actionName = `查看支付宝小程序${qrCodeType}`
       break
-    case 'swanQrCodeUrl':
-      actionName = `查看百度小程序${qrCodeType}`
-      break
-    case 'ttQrCodeUrl':
-      actionName = `查看字节小程序${qrCodeType}`
-      break
     case 'jdQrCodeUrl':
       actionName = `查看京东小程序${qrCodeType}`
+      break
+    case 'swanQrCodeUrl':
+      actionName = `点击跳转百度小程序${qrCodeType}`
+      break
+    case 'ttQrCodeUrl':
+      actionName = `点击跳转字节小程序${qrCodeType}`
       break
   }
   return actionName

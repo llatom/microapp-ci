@@ -1,12 +1,4 @@
-const {
-  initAction,
-  doctorAction,
-  openAction,
-  previewAction,
-  uploadAction,
-  uploadAllAction,
-  previewAllAction,
-} = require('./actions')
+const { buildAction, initAction, doctorAction, openAction, previewAction, uploadAction } = require('./actions')
 
 const CLI_CONFIG = [
   {
@@ -35,14 +27,9 @@ const CLI_CONFIG = [
     action: previewAction,
   },
   {
-    command: 'upload:all',
-    description: '自动完成多平台构建上传体验版',
-    action: uploadAllAction,
-  },
-  {
-    command: 'preview:all',
-    description: '自动完成多平台构建预览',
-    action: previewAllAction,
+    command: 'build',
+    description: '构建打包压缩并完成消息推送',
+    action: buildAction,
   },
 ]
 

@@ -175,7 +175,7 @@ export class MicroAppCi {
       platformsAll.push(platform)
       archive.directory(path.resolve(dir), platform)
     }
-    const zipName = `mp(${platformsAll.join('_')})_${this.deployConfig.version}.zip`
+    const zipName = `mp(${platformsAll.join('_')}).zip`
 
     const tempDirAbs = path.resolve(tempDir)
     if (!fse.existsSync(tempDirAbs)) {

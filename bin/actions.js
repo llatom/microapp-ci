@@ -1,6 +1,7 @@
 const inquirer = require('inquirer')
 const { MicroAppCi } = require('../lib/index.js')
 const { writeDeployConfigFile, checkDeployConfigFile } = require('../lib/utils/fs.js')
+const { getBuildEnv, getBuildAction, getBuildPlatform } = require('../lib/utils/utils')
 const currentDir = process.cwd()
 
 function initAction() {
@@ -161,20 +162,23 @@ function uploadAction() {
   })
 }
 
-function previewAllAction() {
-  const previewConfig = { platforms: ['weapp', 'alipay', 'tt', 'swan', 'jd'], env: 'test' }
-  const deployConfig = { ...checkDeployConfigFile(currentDir), ...previewConfig }
-  new MicroAppCi(deployConfig).preview()
-}
-
-function uploadAllAction() {
-  const uploadConfig = {
-    platforms: ['weapp', 'alipay', 'tt', 'swan', 'jd'],
-    version: '',
-    desc: '',
+function buildAction() {
+  const BUILD_ENV = getBuildEnv()
+  const BUILD_ACTION = getBuildAction()
+  const BUILD_PLATFORM = getBuildPlatform()
+  if (BUILD_ACTION === 'preview') {
+    const previewConfig = { platforms: BUILD_PLATFORM, env: BUILD_ENV }
+    const deployConfig = { ...checkDeployConfigFile(currentDir), ...previewConfig }
+    new MicroAppCi(deployConfig).preview()
+  } else {
+    const uploadConfig = {
+      platforms: BUILD_PLATFORM,
+      version: '',
+      desc: '',
+    }
+    const deployConfig = { ...checkDeployConfigFile(currentDir), ...uploadConfig }
+    new MicroAppCi(deployConfig).upload()
   }
-  const deployConfig = { ...checkDeployConfigFile(currentDir), ...uploadConfig }
-  new MicroAppCi(deployConfig).upload()
 }
 
 module.exports = {
@@ -183,6 +187,5 @@ module.exports = {
   openAction,
   previewAction,
   uploadAction,
-  previewAllAction,
-  uploadAllAction,
+  buildAction,
 }
