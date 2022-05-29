@@ -32,7 +32,7 @@ microapp-ci preview
 ```
 microapp-ci upload 
 ```
-上述两个命令因有用户交互，需用户选择构建平台，构建环境等信息，所以仅适用本地命令行使用。
+上述命令因有用户交互，需用户选择构建平台，构建环境等信息，所以仅适用本地命令行使用。
  - 因各平台小程序差异性，如微信命令行ci工具返回的二维码链接无法查看.
  - 测试同学需要小程序包进行多场景测试，需提供构建压缩包
  - 依然依赖研发同学命令行执行，不能结合现有的流水线完全解放研发生产力
@@ -77,7 +77,7 @@ Commands:
   doctor             检查发布配置文件是否正确(TODO)
   help [command]     display help for command
 ```
-#### 最终效果
+#### 消息推送示例
 
 <img src="https://raw.githubusercontent.com/marsczen/microapp-ci/master/preview.png" alt="preview" width="200"/>
 
