@@ -12,7 +12,7 @@ import SwanCI from './platform/swan-ci'
 import { spinner } from './utils/spinner'
 import { DEPLOY_CONFIG_DATA } from './types/base-ci'
 
-type Platforms = 'weapp' | 'alipay' | 'tt' | 'jd' | 'swan'
+type Platforms = 'weapp' | 'weay' | 'alipay' | 'tt' | 'jd' | 'swan'
 type DirsMap = Map<Platforms, string>
 const tempDir = 'dist'
 
@@ -29,6 +29,7 @@ export class MicroAppCi {
       let ci
       switch (platform) {
         case 'weapp':
+        case 'weqy':
           ci = new WeappCI(deployConfig)
           break
         case 'tt':
@@ -59,7 +60,13 @@ export class MicroAppCi {
       const logFilePath = path.join(process.cwd(), `build_${platform}.log`)
       const stream = fs.createWriteStream(logFilePath)
       const platformText =
-        platform === 'weapp' ? '微信' : platform === 'alipay' ? '支付宝' : platform === 'swan' ? '百度' : '字节'
+        platform === 'weapp' || platform === 'weqy'
+          ? '微信'
+          : platform === 'alipay'
+          ? '支付宝'
+          : platform === 'swan'
+          ? '百度'
+          : '字节'
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
       const cmd = `taro build --type ${platform}`
       const proc = spawn('npx', cmd.split(' '), {

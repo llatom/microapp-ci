@@ -22,7 +22,7 @@ npm i microapp-ci -D
 ```
 microapp-ci open  
 ```
-#### 预览版构建
+#### 预览版构建:
 构建小程序并生成预览二维码
 ```
 microapp-ci preview  
@@ -61,7 +61,6 @@ Options:
 
 Commands:
   build              构建打包压缩并完成消息推送
-  help [command]     display help for command
 
 ```
 #### 配置相关
