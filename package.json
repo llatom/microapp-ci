@@ -1,6 +1,6 @@
 {
   "name": "microapp-ci",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Taro小程序多端开发CI方案",
   "main": "bin/index.js",
   "bin": {
