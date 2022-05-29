@@ -132,10 +132,10 @@ export class MicroAppCi {
     const zipFile = (await this.createZipArchive(zipDirs)) as string
     spinner.success(`zip打包完成，zip位置：${zipFile}`)
     const zipName = zipFile.length > 1 ? zipFile.substring(zipFile.indexOf('mp'), zipFile.length) : ''
-    noticeCardConfig.buildUrl = `${noticeCardConfig.buildUrl}${zipName}`
+    noticeCardConfig.buildUrl = `${deployConfig.deployBaseUrl}${deployConfig.env}/${zipName}`
     setTimeout(async () => {
       this.pushNoticeMsg(noticeCardConfig, true)
-    }, 20000)
+    }, 30000)
   }
 
   async preview() {
@@ -154,10 +154,10 @@ export class MicroAppCi {
     const zipFile = (await this.createZipArchive(zipDirs)) as string
     spinner.success(`zip打包完成，zip位置：${zipFile}`)
     const zipName = zipFile.length > 1 ? zipFile.substring(zipFile.indexOf('mp'), zipFile.length) : ''
-    noticeCardConfig.buildUrl = `${noticeCardConfig.buildUrl}${zipName}`
+    noticeCardConfig.buildUrl = `${deployConfig.deployBaseUrl}${deployConfig.env}/${zipName}`
     setTimeout(async () => {
       this.pushNoticeMsg(noticeCardConfig, false)
-    }, 20000)
+    }, 30000)
   }
 
   /** 打包对应平台dist目录到zip */

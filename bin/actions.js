@@ -175,6 +175,7 @@ function buildAction() {
       platforms: BUILD_PLATFORM,
       version: '',
       desc: '',
+      env: 'prod',
     }
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...uploadConfig }
     new MicroAppCi(deployConfig).upload()

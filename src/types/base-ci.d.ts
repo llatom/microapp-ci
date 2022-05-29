@@ -96,6 +96,8 @@ export interface DEPLOY_CONFIG_DATA {
   webhookUrl: string
   /** 推送消息卡片配置 */
   noticeCardConfig: noticeCardConfig
+  /** base url */
+  deployBaseUrl: string
   /** 京东小程序体验码默认地址 */
   defaultJdQrUrl: string
   /** 打包环境, 默认取env.config的 env字段 */
