@@ -7,7 +7,7 @@
 
 ### 安装
 ---
-####方式一： 全局安装 microapp-ci
+#### 方式一： 全局安装 microapp-ci
 ```
 npm i microapp-ci -g
 ```
@@ -18,12 +18,12 @@ npm i microapp-ci -D
 ```
 
 ### 使用
-####预览版构建
+#### 预览版构建
 构建小程序并生成预览二维码
 ```
 microapp-ci preview  
 ```
-####体验版发布：
+#### 体验版发布：
 构建小程序并完成上传体验版，同时生成体验二维码
 ```
 microapp-ci upload 
@@ -37,7 +37,7 @@ microapp-ci upload
 
 ---
 
-####构建打包压缩并完成消息推送
+#### 构建打包压缩并完成消息推送
 ```
 microapp-ci build 
 ```
@@ -59,9 +59,9 @@ Commands:
   help [command]     display help for command
 
 ```
-####最终效果
+#### 最终效果
+
 <img src="https://raw.githubusercontent.com/marsczen/microapp-ci/master/preview.png" alt="preview" width="200"/>
 
 
   [1]: https://github.com/NervJS/taro/tree/next/packages/taro-plugin-mini-ci
-  [2]: https://raw.githubusercontent.com/marsczen/microapp-ci/master/preview.png
