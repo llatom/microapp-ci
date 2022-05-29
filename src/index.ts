@@ -142,7 +142,7 @@ export class MicroAppCi {
     noticeCardConfig.buildUrl = `${deployConfig.deployBaseUrl}${deployConfig.env}/${zipName}`
     setTimeout(async () => {
       this.pushNoticeMsg(noticeCardConfig, true)
-    }, 30000)
+    }, 50000)
   }
 
   async preview() {
@@ -164,7 +164,7 @@ export class MicroAppCi {
     noticeCardConfig.buildUrl = `${deployConfig.deployBaseUrl}${deployConfig.env}/${zipName}`
     setTimeout(async () => {
       this.pushNoticeMsg(noticeCardConfig, false)
-    }, 30000)
+    }, 50000)
   }
 
   /** 打包对应平台dist目录到zip */
