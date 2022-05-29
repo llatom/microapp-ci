@@ -28,7 +28,7 @@ const CLI_CONFIG = [
   },
   {
     command: 'build',
-    description: '构建打包压缩并完成消息推送',
+    description: '构建打包压缩及触发飞书消息推送',
     action: buildAction,
   },
 ]

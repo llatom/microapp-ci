@@ -98,8 +98,6 @@ export interface DEPLOY_CONFIG_DATA {
   noticeCardConfig: noticeCardConfig
   /** 京东小程序体验码默认地址 */
   defaultJdQrUrl: string
-  /** 是否安装依赖 默认为false */
-  npmInstall: string
   /** 打包环境, 默认取env.config的 env字段 */
   env: string
   /** 微信小程序CI配置, 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/devtools/ci.html */
@@ -130,8 +128,6 @@ export default abstract class BaseCI {
   public webhookUrl: string
   /** 推送消息卡片配置 */
   noticeCardConfig: noticeCardConfig
-  /** 是否安装依赖 */
-  public npmInstall: boolean
   /** 字节小程序CI配置 */
   public tt: TTConfig
   /** 支付宝系列小程序配置 */

@@ -75,25 +75,25 @@ export function handleProgress(taskStatus) {
 
 export function getActionName(action, isExperience) {
   let actionName = ''
-  const qrCodeType = isExperience ? '体验码' : '预览码'
+  const qrCodeType = isExperience ? '体验' : '预览'
   switch (action) {
     case 'buildUrl':
       actionName = '点击下载小程序构建包'
       break
     case 'weappQrCodeUrl':
-      actionName = `查看微信小程序${qrCodeType}`
+      actionName = `查看微信小程序${qrCodeType}码`
       break
     case 'alipayQrCodeUrl':
-      actionName = `查看支付宝小程序${qrCodeType}`
+      actionName = `查看支付宝小程序${qrCodeType}码`
       break
     case 'jdQrCodeUrl':
-      actionName = `查看京东小程序${qrCodeType}`
+      actionName = `查看京东小程序${qrCodeType}码`
       break
     case 'swanQrCodeUrl':
-      actionName = `点击跳转百度小程序${qrCodeType}`
+      actionName = `戳我跳转百度小程序${qrCodeType}版`
       break
     case 'ttQrCodeUrl':
-      actionName = `点击跳转字节小程序${qrCodeType}`
+      actionName = `戳我跳转字节小程序${qrCodeType}版`
       break
   }
   return actionName

@@ -36,7 +36,6 @@
   "defaultWeappQrUrl": "微信体验码默认地址",
   "defaultJdQrUrl": "京东体验码默认地址",
   "env": "编译需要用的环境变量",
-  "npmInstall": "是否安装依赖",
   "webhookUrl": "构建成功后的webhook回调地址",
   "version": "1.0.0",
   "desc": "版本描述"

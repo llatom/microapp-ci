@@ -25,18 +25,20 @@ npm i microapp-ci -g
 Usage: microapp-ci [options] [command]
 
 Options:
-  -V, --version   output the version number
-  -h, --help      display help for command
+  -V, --version      output the version number
+  -a, --buildAction  可选项[preview, upload]，执行preview生成预览码，upload上传体验版，默认preview
+  -e, --buildEnv     可选项[test, prod]，test打包测试环境，prod打包生产环境，默认test
+  -t, --type         可选项[weapp, weqy, alipay, tt, swan, jd]，微信小程序，企业微信小程序，支付宝小程序，字节小程序，百度小程序，京东小程序，默认weapp
+  -h, --help         display help for command
 
 Commands:
-  init            初始化发布配置文件
-  doctor          检查发布配置文件是否正确[TODO]
-  open            构建完后自动打开开发者工具
-  upload          构建完后上传代码作为体验版
-  preview         构建完后作为开发版并生成预览二维码
-  upload:all      自动完成多平台构建上传体验版
-  preview:all     自动完成多平台构建预览
-  help [command]  display help for command
+  init               初始化发布配置文件
+  doctor             检查发布配置文件是否正确
+  open               构建完后自动打开开发者工具
+  upload             构建完后上传代码作为体验版
+  preview            构建完后作为开发版并生成预览二维码
+  build              构建打包压缩并完成消息推送
+  help [command]     display help for command
 
 ```
 
