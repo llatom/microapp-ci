@@ -134,9 +134,9 @@ export class MicroAppCi {
       })
     ).finally(() => {
       setTimeout(async () => {
-        // fix百度预览延迟问题
+        // fix百度上传延迟问题
         this.pushNoticeMsg(noticeCardConfig, true)
-      }, 70000)
+      }, 90000)
     })
   }
 
@@ -153,7 +153,7 @@ export class MicroAppCi {
       setTimeout(async () => {
         // fix百度预览延迟问题
         this.pushNoticeMsg(noticeCardConfig, false)
-      }, 70000)
+      }, 90000)
     })
   }
 
