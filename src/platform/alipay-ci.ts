@@ -1,72 +1,70 @@
 /* eslint-disable no-console */
-import * as miniu from 'miniu'
+import minidev from 'minidev'
 import * as path from 'path'
 import fs from 'fs'
 import BaseCI from '../base-ci'
 import generateQrCode from '../utils/qr-code'
 import { spinner } from '../utils/spinner'
 export default class AlipayCI extends BaseCI {
-  protected _init(): void {
+  protected async _init(): Promise<void> {
     if (this.deployConfig.alipay == null) {
       throw new Error('请为"microapp-ci"插件配置 "alipay" 选项')
     }
-    const { toolId, privateKeyPath: _privateKeyPath, proxy } = this.deployConfig.alipay
+    const { toolId, privateKeyPath: _privateKeyPath } = this.deployConfig.alipay
     const privateKeyPath = path.isAbsolute(_privateKeyPath)
       ? _privateKeyPath
       : path.join(this.appPath, _privateKeyPath)
     if (!fs.existsSync(privateKeyPath)) {
       throw new Error(`"alipay.privateKeyPath"选项配置的路径不存在,本次上传终止:${privateKeyPath}`)
     }
-
-    miniu.setConfig({
-      toolId,
-      privateKey: fs.readFileSync(privateKeyPath, 'utf-8'),
-      proxy,
+    await minidev.config.useRuntime({
+      'alipay.authentication.privateKey': fs.readFileSync(privateKeyPath, 'utf-8'),
+      'alipay.authentication.toolId': toolId,
     })
   }
 
   open() {
-    spinner.error('阿里小程序不支持 "--open" 参数打开开发者工具')
+    minidev.startIde({
+      project: this.deployConfig.alipay!.projectPath,
+      lite: true,
+    })
   }
 
   async preview() {
     spinner.pending('正在生成支付宝小程序预览码，请稍后...')
-    const previewResult = await miniu.miniPreview({
+    const previewResult = await minidev.preview({
       project: this.deployConfig.alipay!.projectPath,
       appId: this.deployConfig.alipay!.appId,
       clientType: this.deployConfig.alipay!.clientType || 'alipay',
-      qrcodeFormat: 'image',
-      qrcodeOutput: './dist/alipay_preview.jpg',
     })
-    spinner.info(`预览二维码地址： ${previewResult.packageQrcode}`)
-    generateQrCode(previewResult.packageQrcode!)
-    return previewResult.packageQrcode
+    spinner.info(`预览二维码地址： ${previewResult.qrcodeUrl}`)
+    generateQrCode(previewResult.qrcodeUrl!)
+    return previewResult.qrcodeUrl
   }
 
   async upload() {
     const clientType = this.deployConfig.alipay!.clientType || 'alipay'
     spinner.info(`上传代码到阿里小程序后台${clientType}`)
-    // 上传结果CI库本身有提示，故此不做异常处理
-    // TODO 阿里的CI库上传时不能设置“禁止压缩”，所以上传时被CI二次压缩代码，可能会造成报错，这块暂时无法处理; SDK上传不支持设置描述信息
-    const result = await miniu.miniUpload({
-      project: this.deployConfig.alipay!.projectPath,
-      appId: this.deployConfig.alipay!.appId,
-      packageVersion: this.version,
-      clientType,
-      experience: true,
-      onProgressUpdate(info) {
-        const { status, data } = info
-        spinner.info(`${status} ${data}`)
-      },
-    })
-    if (result.packages) {
-      const allPackageInfo = result.packages.find((pkg) => pkg.type === 'FULL')
-      const mainPackageInfo = result.packages.find((item) => item.type === 'MAIN')
-      const extInfo = `本次上传${allPackageInfo!.size} ${
-        mainPackageInfo ? ',其中主包' + mainPackageInfo.size : ''
-      }`
-      spinner.success(`上传成功 ${new Date().toLocaleString()} ${extInfo}`)
-    }
-    return result.qrCodeUrl
+    const uploadResult = await minidev
+      .upload(
+        {
+          appId: this.deployConfig.alipay!.appId,
+          clientType,
+          experience: true,
+          version: this.deployConfig.alipay.version,
+          project: this.deployConfig.alipay!.projectPath,
+        },
+        {
+          onLog: (data) => {
+            // 输出日志
+            spinner.info(`${data}`)
+          },
+        }
+      )
+      .catch((err) => {
+        spinner.error(`上传代码到阿里小程序后台${clientType}失败，请检查配置${err}`)
+        throw err
+      })
+    return uploadResult.experienceQrCodeUrl
   }
 }

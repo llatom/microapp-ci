@@ -1,5 +1,6 @@
 import { spinner } from './spinner'
 import simpleGit from 'simple-git'
+const Dayjs = require('dayjs')
 
 /**
  * 获取buildEnv： preview | upload
@@ -51,6 +52,11 @@ export function getBuildEnv() {
   return allowBuildEnv[0]
 }
 
+export function handleGenerateVersionByDate() {
+  const date = Dayjs().format('YYMMDDHHMM')
+  return date
+}
+
 export async function getLatestCommitMsg(baseDir: string) {
   const git = simpleGit(baseDir)
 
@@ -81,6 +87,7 @@ export function getActionName(action, isExperience) {
       actionName = '点击下载小程序构建包'
       break
     case 'weappQrCodeUrl':
+    case 'weqyQrCodeUrl':
       actionName = `查看微信小程序${qrCodeType}码`
       break
     case 'alipayQrCodeUrl':

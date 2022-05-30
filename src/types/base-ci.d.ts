@@ -55,6 +55,8 @@ export interface AlipayConfig {
   appId: string
   /** 工具id */
   toolId: string
+  // 支付宝版本号
+  version: string
   /** 私钥相对路径 */
   privateKeyPath: string
   /** 服务代理地址（可选） */
@@ -88,6 +90,10 @@ export interface noticeCardConfig {
 export interface DEPLOY_CONFIG_DATA {
   /** 发布版本号，默认取 package.json 文件的 taroConfig.version 字段 */
   version: string
+  /** 是否根据日期生成版本号 */
+  isGenerateVersion: string
+  /** 当前主版本号 */
+  majorVersion: string
   /** 版本发布描述， 默认取 package.json 文件的 taroConfig.desc 字段 */
   desc: string
   /** 打包平台，默认为[] */
@@ -106,7 +112,7 @@ export interface DEPLOY_CONFIG_DATA {
   weapp?: WeappConfig
   /** 字节小程序配置, 官方文档地址：https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/developer-instrument/development-assistance/ide-order-instrument */
   tt?: TTConfig
-  /** 支付宝系列小程序配置，官方文档地址： https://opendocs.alipay.com/mini/miniu/api */
+  /** 支付宝系列小程序配置，官方文档地址： https://opendocs.alipay.com/mini/02q17h */
   alipay?: AlipayConfig
   /** 百度小程序配置, 官方文档地址：https://smartprogram.baidu.com/docs/develop/devtools/commandtool/ */
   swan?: SwanConfig
@@ -116,6 +122,10 @@ export default abstract class BaseCI {
   protected deployConfig: DEPLOY_CONFIG_DATA
   /** 当前要发布的版本号 */
   public version: string
+  /** 是否根据日期生成版本号 */
+  public isGenerateVersion: string
+  /** 当前主版本号 */
+  public majorVersion: string
   /** base url */
   public deployBaseUrl: string
   /** 微信体验码默认地址 */

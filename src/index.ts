@@ -126,6 +126,7 @@ export class MicroAppCi {
   async upload() {
     const noticeCardConfig = this.deployConfig.noticeCardConfig
     await this.handleNoticeData()
+    const delayTime = this.deployConfig.platforms.includes('swan') ? 90000 : 0
     Promise.all(
       this.microappCiArr.map(async (item) => {
         await item.ci.upload().then((e) => {
@@ -136,13 +137,14 @@ export class MicroAppCi {
       setTimeout(async () => {
         // fix百度上传延迟问题
         this.pushNoticeMsg(noticeCardConfig, true)
-      }, 90000)
+      }, delayTime)
     })
   }
 
   async preview() {
     const noticeCardConfig = this.deployConfig.noticeCardConfig
     await this.handleNoticeData()
+    const delayTime = this.deployConfig.platforms.includes('swan') ? 90000 : 0
     Promise.all(
       this.microappCiArr.map(async (item) => {
         await item.ci.preview().then((e) => {
@@ -152,8 +154,9 @@ export class MicroAppCi {
     ).finally(() => {
       setTimeout(async () => {
         // fix百度预览延迟问题
+        console.log(this.deployConfig)
         this.pushNoticeMsg(noticeCardConfig, false)
-      }, 90000)
+      }, delayTime)
     })
   }
 

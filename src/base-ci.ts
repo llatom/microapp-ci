@@ -26,7 +26,7 @@ export default abstract class BaseCI {
     )
     this.version = deployConfig.version || packageInfo.taroConfig?.version || '1.0.0'
     this.desc =
-      deployConfig.desc || packageInfo.taroConfig?.desc || `CI构建自动构建于${new Date().toLocaleTimeString()}`
+      deployConfig.desc || packageInfo.description || `CI构建自动构建于${new Date().toLocaleTimeString()}`
 
     this._init()
   }

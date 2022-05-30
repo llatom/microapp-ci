@@ -1,7 +1,12 @@
 const inquirer = require('inquirer')
 const { MicroAppCi } = require('../lib/index.js')
 const { writeDeployConfigFile, checkDeployConfigFile } = require('../lib/utils/fs.js')
-const { getBuildEnv, getBuildAction, getBuildPlatform } = require('../lib/utils/utils')
+const {
+  getBuildEnv,
+  getBuildAction,
+  getBuildPlatform,
+  handleGenerateVersionByDate,
+} = require('../lib/utils/utils')
 const currentDir = process.cwd()
 
 function initAction() {
@@ -166,18 +171,25 @@ function buildAction() {
   const BUILD_ENV = getBuildEnv()
   const BUILD_ACTION = getBuildAction()
   const BUILD_PLATFORM = getBuildPlatform()
+  const currentVersion = handleGenerateVersionByDate()
   if (BUILD_ACTION === 'preview') {
     const previewConfig = { platforms: BUILD_PLATFORM, env: BUILD_ENV }
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...previewConfig }
+    const version = deployConfig.isGenerateVersion
+      ? deployConfig.majorVersion + '.' + currentVersion
+      : deployConfig.version
+    deployConfig.version = version
     new MicroAppCi(deployConfig).preview()
   } else {
     const uploadConfig = {
       platforms: BUILD_PLATFORM,
-      version: '',
-      desc: '',
       env: 'prod',
     }
     const deployConfig = { ...checkDeployConfigFile(currentDir), ...uploadConfig }
+    const version = deployConfig.isGenerateVersion
+      ? deployConfig.majorVersion + '.' + currentVersion
+      : deployConfig.version
+    deployConfig.version = version
     new MicroAppCi(deployConfig).upload()
   }
 }
