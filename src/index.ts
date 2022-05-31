@@ -38,9 +38,9 @@ export class MicroAppCi {
         case 'alipay':
           ci = new AlipayCI(deployConfig)
           break
-        case 'swan':
-          ci = new SwanCI(deployConfig)
-          break
+        // case 'swan':
+        //   ci = new SwanCI(deployConfig)
+        //   break
         default:
           break
       }

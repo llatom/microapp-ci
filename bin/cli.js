@@ -8,7 +8,7 @@ const CLI_CONFIG = [
   },
   {
     command: 'doctor',
-    description: '检查发布配置文件是否正确',
+    description: '检查发布配置文件是否正确[TODO]',
     action: doctorAction,
   },
   {
