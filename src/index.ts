@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as fse from 'fs-extra'
 import archiver from 'archiver'
 import fs from 'fs'
-import { spawn } from 'child_process'
+// import { spawn } from 'child_process'
 import pushNotice from './notice/notice'
 import WeappCI from './platform/weapp-ci'
 import TTCI from './platform/tt-ci'
@@ -11,6 +11,7 @@ import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
 import { spinner } from './utils/spinner'
 import { DEPLOY_CONFIG_DATA } from './types/base-ci'
+const spawn = require('cross-spawn')
 
 type Platforms = 'weapp' | 'weay' | 'alipay' | 'tt' | 'jd' | 'swan'
 type DirsMap = Map<Platforms, string>
@@ -69,7 +70,7 @@ export class MicroAppCi {
           : '字节'
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
       const cmd = `taro build --type ${platform}`
-      const proc = spawn(/^win/.test(process.platform) ? 'npx.cmd' : 'npx', cmd.split(' '), {
+      const proc = spawn('npx', cmd.split(' '), {
         env: {
           ...process.env,
           ...env,
@@ -154,7 +155,6 @@ export class MicroAppCi {
     ).finally(() => {
       setTimeout(async () => {
         // fix百度预览延迟问题
-        console.log(this.deployConfig)
         this.pushNoticeMsg(noticeCardConfig, false)
       }, delayTime)
     })
