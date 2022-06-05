@@ -69,8 +69,8 @@ export class MicroAppCi {
           ? '百度'
           : '字节'
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
-      const cmd = `taro build --type ${platform}`
-      const proc = spawn('npx', cmd.split(' '), {
+      const cmd = `build --type ${platform}`
+      const proc = spawn('taro', cmd.split(' '), {
         env: {
           ...process.env,
           ...env,
