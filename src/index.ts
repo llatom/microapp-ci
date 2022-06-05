@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as fse from 'fs-extra'
 import archiver from 'archiver'
 import fs from 'fs'
-// import { spawn } from 'child_process'
+import { spawn } from 'child_process'
 import pushNotice from './notice/notice'
 import WeappCI from './platform/weapp-ci'
 import TTCI from './platform/tt-ci'
@@ -11,7 +11,6 @@ import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
 import { spinner } from './utils/spinner'
 import { DEPLOY_CONFIG_DATA } from './types/base-ci'
-const spawn = require('cross-spawn')
 
 type Platforms = 'weapp' | 'weay' | 'alipay' | 'tt' | 'jd' | 'swan'
 type DirsMap = Map<Platforms, string>
@@ -39,9 +38,9 @@ export class MicroAppCi {
         case 'alipay':
           ci = new AlipayCI(deployConfig)
           break
-        // case 'swan':
-        //   ci = new SwanCI(deployConfig)
-        //   break
+        case 'swan':
+          ci = new SwanCI(deployConfig)
+          break
         default:
           break
       }
@@ -69,8 +68,8 @@ export class MicroAppCi {
           ? '百度'
           : '字节'
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
-      const cmd = `build --type ${platform}`
-      const proc = spawn('taro', cmd.split(' '), {
+      const cmd = `taro build --type ${platform}`
+      const proc = spawn('npx', cmd.split(' '), {
         env: {
           ...process.env,
           ...env,
