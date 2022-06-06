@@ -38,9 +38,9 @@ export class MicroAppCi {
         case 'alipay':
           ci = new AlipayCI(deployConfig)
           break
-        case 'swan':
-          ci = new SwanCI(deployConfig)
-          break
+        // case 'swan':
+        //   ci = new SwanCI(deployConfig)
+        //   break
         default:
           break
       }
@@ -68,12 +68,13 @@ export class MicroAppCi {
           ? '百度'
           : '字节'
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
-      const cmd = `taro build --type ${platform}`
-      const proc = spawn('npx', cmd.split(' '), {
+      const cmd = `run build:${platform}`
+      const proc = spawn('npm', cmd.split(' '), {
         env: {
           ...process.env,
           ...env,
         },
+        shell: true,
       })
       const promise = new Promise((resolve, reject) => {
         proc.stdout.setEncoding('utf-8')
