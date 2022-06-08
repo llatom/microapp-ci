@@ -10,6 +10,7 @@ import TTCI from './platform/tt-ci'
 import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
 import { spinner } from './utils/spinner'
+import { convertPlatformToText } from './utils/utils'
 import { DEPLOY_CONFIG_DATA } from './types/base-ci'
 
 type Platforms = 'weapp' | 'weay' | 'alipay' | 'tt' | 'jd' | 'swan'
@@ -59,23 +60,10 @@ export class MicroAppCi {
     platforms.forEach((platform) => {
       const logFilePath = path.join(process.cwd(), `build_${platform}.log`)
       const stream = fs.createWriteStream(logFilePath)
-      const platformText =
-        platform === 'weapp' || platform === 'weqy'
-          ? '微信'
-          : platform === 'alipay'
-          ? '支付宝'
-          : platform === 'swan'
-          ? '百度'
-          : '字节'
+      const platformText = convertPlatformToText(platform)
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
-      const cmd = `run build:${platform}`
-      const proc = spawn('npm', cmd.split(' '), {
-        env: {
-          ...process.env,
-          ...env,
-        },
-        shell: true,
-      })
+      const cmd = `npm run build:${platform}`
+      const proc = spawn('npm', ['run', `build:${platform}`], { env: { ...process.env, ...env } })
       const promise = new Promise((resolve, reject) => {
         proc.stdout.setEncoding('utf-8')
         proc.stdout.on('data', (data: string) => {

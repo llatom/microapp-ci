@@ -105,3 +105,26 @@ export function getActionName(action, isExperience) {
   }
   return actionName
 }
+
+export function convertPlatformToText(platform) {
+  let platformText = ''
+  switch (platform) {
+    case 'weapp':
+    case 'weqy':
+      platformText = '微信'
+      break
+    case 'alipay':
+      platformText = '支付宝'
+      break
+    case 'swan':
+      platformText = '百度'
+      break
+    case 'tt':
+      platformText = '字节'
+      break
+    case 'jd':
+      platformText = '京东'
+      break
+  }
+  return platformText
+}
