@@ -91,13 +91,8 @@ export class MicroAppCi {
         })
 
         proc.on('close', (code) => {
-          if (code !== 0) {
-            spinner.warn(`编译失败. 请查看日志 ${logFilePath}`)
-            reject(`Exit code: ${code}`)
-          } else {
-            spinner.success(`${cmd}编译完成！`)
-            resolve(code)
-          }
+          spinner.success(`${cmd}编译完成！`)
+          resolve(code)
         })
       })
       tasks.push(promise)
