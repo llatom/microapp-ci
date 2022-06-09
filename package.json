@@ -17,7 +17,19 @@
     "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier \"**/*.{ts,md,json}\"",
     "prettier:check": "npm run prettier -- --check",
-    "prettier:fix": "npm run prettier -- --write"
+    "prettier:fix": "npm run prettier -- --write",
+    "build:weqy": "taro build --type weqy --buildEnv test",
+    "build:weapp": "taro build --type weapp --buildEnv test",
+    "build:alipay": "taro build --type alipay --buildEnv test",
+    "build:tt": "taro build --type tt --buildEnv test",
+    "build:jd": "taro build --type jd --buildEnv test",
+    "build:swan": "taro build --type swan --buildEnv test",
+    "build:weqy:prod": "taro build --type weqy --buildEnv prod",
+    "build:weapp:prod": "taro build --type weapp --buildEnv prod",
+    "build:alipay:prod": "taro build --type alipay --buildEnv prod",
+    "build:tt:prod": "taro build --type tt --buildEnv prod",
+    "build:jd:prod": "taro build --type jd --buildEnv prod",
+    "build:swan:prod": "taro build --type swan --buildEnv prod"
   },
   "repository": {
     "type": "git",
@@ -29,6 +41,7 @@
   ],
   "author": "czen",
   "dependencies": {
+    "@tarojs/cli": "^3.3.19",
     "archiver": "^5.3.1",
     "chalk": "^4.1.2",
     "commander": "^9.3.0",

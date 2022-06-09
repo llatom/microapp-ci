@@ -63,7 +63,7 @@ export class MicroAppCi {
       const platformText = convertPlatformToText(platform)
       spinner.pending(`正在编译${platformText}小程序，请稍后...`)
       const cmd = `npm run build:${platform}`
-      const proc = spawn('npm', ['run', `build:${platform}`])
+      const proc = spawn('npm', ['run', `build:${platform}`], { env: { ...process.env, ...env } })
       const promise = new Promise((resolve, reject) => {
         proc.stdout.setEncoding('utf-8')
         proc.stdout.on('data', (data: string) => {
@@ -72,7 +72,7 @@ export class MicroAppCi {
             str = data.substring(0, 50) + '...'
           }
           stream.write(data)
-          spinner.info(`[${platformText}]stdout: -> ${str}`.trim())
+          spinner.info(`[${platformText}]标准输出: -> ${str}`.trim())
         })
 
         proc.stderr.setEncoding('utf-8')
@@ -82,7 +82,7 @@ export class MicroAppCi {
             str = data.substring(0, 50) + '...'
           }
           stream.write(data)
-          spinner.info(`[${platformText}]stderr: -> ${str}`.trim())
+          spinner.info(`[${platformText}]标准错误: -> ${str}`.trim())
         })
 
         proc.on('error', (e) => {
@@ -92,7 +92,7 @@ export class MicroAppCi {
 
         proc.on('close', (code) => {
           if (code !== 0) {
-            spinner.warn(`编译失败${code}. 请查看日志 ${logFilePath}`)
+            spinner.warn(`编译失败. 请查看日志 ${logFilePath}`)
             reject(`Exit code: ${code}`)
           } else {
             spinner.success(`${cmd}编译完成！`)
