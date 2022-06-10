@@ -39,9 +39,9 @@ export class MicroAppCi {
         case 'alipay':
           ci = new AlipayCI(deployConfig)
           break
-        // case 'swan':
-        //   ci = new SwanCI(deployConfig)
-        //   break
+        case 'swan':
+          ci = new SwanCI(deployConfig)
+          break
         default:
           break
       }
@@ -91,8 +91,13 @@ export class MicroAppCi {
         })
 
         proc.on('close', (code) => {
-          spinner.success(`${cmd}编译完成！`)
-          resolve(code)
+          if (code !== 0) {
+            spinner.warn(`编译失败. 请查看日志 ${logFilePath}`)
+            reject(`Exit code: ${code}`)
+          } else {
+            spinner.success(`${cmd}编译完成！`)
+            resolve(code)
+          }
         })
       })
       tasks.push(promise)
