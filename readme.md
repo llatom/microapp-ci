@@ -71,7 +71,7 @@ Options:
 
 Commands:
   init               初始化发布配置文件
-  doctor             检查发布配置文件是否正确(TODO)
+  doctor             检查发布配置文件是否正确
   help [command]     display help for command
 ```
 #### 消息推送示例

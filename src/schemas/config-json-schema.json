@@ -2,51 +2,243 @@
   "$id": "configdata",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "DEPLOY_CONFIG_DATA": {
+    "AlipayConfig": {
+      "description": "支付宝系列小程序配置",
       "properties": {
-        "weapp": {
-          "appid": "微信小程戏appid",
-          "privateKeyPath": "密钥文件相对项目根目录的相对路径，例如 key/private.appid.key",
-          "enable": "开启/关闭构建",
-          "projectPath": "项目构建目录"
-        },
-        "tt": {
-          "email": "字节小程序邮箱",
-          "password": "字节小程序密码",
-          "enable": "开启/关闭构建",
-          "projectPath": "项目构建目录"
-        },
-        "alipay": {
-          "appId": "支付宝小程序appId",
-          "toolId": "工具id",
-          "privateKeyPath": "密钥文件相对项目根目录的相对路径，例如 key/pkcs8-private-pem",
-          "enable": "开启/关闭构建",
-          "projectPath": "项目构建目录"
-        },
-        "swan": {
-          "token": "鉴权需要的token令牌",
-          "enable": "开启/关闭构建",
-          "projectPath": "项目构建目录"
-        },
-        "desc": {
-          "description": "自定义发布备注, 默认取最近一次git commit message",
+        "appId": {
           "type": "string"
         },
-        "type": {
-          "$ref": "configdata#/definitions/ProjectType",
-          "description": "项目的类型，有效值 miniProgram/miniProgramPlugin/miniGame/miniGamePlugin"
+        "clientType": {
+          "description": "上传的终端, 默认alipay",
+          "enum": [
+            "alihealth",
+            "alios",
+            "alipay",
+            "alipayiot",
+            "amap",
+            "ampe",
+            "cainiao",
+            "genie",
+            "koubei",
+            "quark",
+            "taobao",
+            "uc"
+          ],
+          "type": "string"
+        },
+        "privateKeyPath": {
+          "description": "私钥相对路径",
+          "type": "string"
+        },
+        "projectPath": {
+          "description": "小程序appId",
+          "type": "string"
+        },
+        "proxy": {
+          "description": "服务代理地址（可选）",
+          "type": "string"
+        },
+        "toolId": {
+          "description": "工具id",
+          "type": "string"
         },
         "version": {
-          "description": "自定义发布版本号, 默认取package.json中的version字段",
           "type": "string"
         }
       },
-      "required": ["privateKeyPath", "projectPath", "type"],
+      "required": ["appId", "privateKeyPath", "projectPath", "toolId", "version"],
       "type": "object"
     },
-    "ProjectType": {
-      "enum": ["miniGame", "miniGamePlugin", "miniProgram", "miniProgramPlugin"],
+    "DEPLOY_CONFIG_DATA": {
+      "properties": {
+        "alipay": {
+          "$ref": "configdata#/definitions/AlipayConfig",
+          "description": "支付宝系列小程序配置，官方文档地址： https://opendocs.alipay.com/mini/02q17h"
+        },
+        "defaultJdQrUrl": {
+          "description": "京东小程序体验码默认地址",
+          "type": "string"
+        },
+        "defaultWeappQrUrl": {
+          "description": "微信体验码默认地址",
+          "type": "string"
+        },
+        "deployBaseUrl": {
+          "description": "base url",
+          "type": "string"
+        },
+        "desc": {
+          "description": "版本发布描述， 默认取 package.json 文件的 taroConfig.desc 字段",
+          "type": "string"
+        },
+        "env": {
+          "description": "打包环境, 默认取env.config的 env字段",
+          "type": "string"
+        },
+        "isGenerateVersion": {
+          "description": "是否根据日期生成版本号",
+          "type": "boolean"
+        },
+        "majorVersion": {
+          "description": "当前主版本号",
+          "type": "string"
+        },
+        "noticeCardConfig": {
+          "$ref": "configdata#/definitions/noticeCardConfig",
+          "description": "推送消息卡片配置"
+        },
+        "platforms": {
+          "description": "打包平台，默认为[]",
+          "items": {
+            "enum": ["alipay", "jd", "swan", "tt", "weapp", "weqy"],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "swan": {
+          "$ref": "configdata#/definitions/SwanConfig",
+          "description": "百度小程序配置, 官方文档地址：https://smartprogram.baidu.com/docs/develop/devtools/commandtool/"
+        },
+        "tt": {
+          "$ref": "configdata#/definitions/TTConfig",
+          "description": "字节小程序配置, 官方文档地址：https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/developer-instrument/development-assistance/ide-order-instrument"
+        },
+        "version": {
+          "description": "发布版本号，默认取 package.json 文件的 taroConfig.version 字段",
+          "type": "string"
+        },
+        "weapp": {
+          "$ref": "configdata#/definitions/WeappConfig",
+          "description": "微信小程序CI配置, 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/devtools/ci.html"
+        },
+        "webhookUrl": {
+          "description": "飞书机器人webhookUrl 默认为''",
+          "type": "string"
+        }
+      },
+      "required": [
+        "defaultJdQrUrl",
+        "defaultWeappQrUrl",
+        "deployBaseUrl",
+        "desc",
+        "env",
+        "isGenerateVersion",
+        "majorVersion",
+        "noticeCardConfig",
+        "platforms",
+        "version",
+        "webhookUrl"
+      ],
+      "type": "object"
+    },
+    "PlatformsType": {
+      "enum": ["alipay", "jd", "swan", "tt", "weapp", "weqy"],
       "type": "string"
+    },
+    "SwanConfig": {
+      "description": "百度小程序配置",
+      "properties": {
+        "minSwanVersion": {
+          "description": "最低基础库版本, 不传默认为 3.350.6",
+          "type": "string"
+        },
+        "projectPath": {
+          "description": "有该小程序发布权限的登录密钥"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": ["projectPath", "token"],
+      "type": "object"
+    },
+    "TTConfig": {
+      "description": "字节小程序配置",
+      "properties": {
+        "email": {
+          "description": "绑定的邮箱账号",
+          "type": "string"
+        },
+        "password": {
+          "description": "密码",
+          "type": "string"
+        },
+        "projectPath": {}
+      },
+      "required": ["email", "password", "projectPath"],
+      "type": "object"
+    },
+    "WeappConfig": {
+      "description": "微信小程序配置",
+      "properties": {
+        "appid": {
+          "description": "小程序/小游戏项目的 appid",
+          "type": "string"
+        },
+        "devToolsInstallPath": {
+          "description": "微信开发者工具安装路径",
+          "type": "string"
+        },
+        "ignores": {
+          "description": "上传需要排除的目录",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "privateKeyPath": {
+          "description": "私钥，在获取项目属性和上传时用于鉴权使用(必填)",
+          "type": "string"
+        },
+        "projectPath": {
+          "description": "上传的小程序的路径（默认 outputPath ）",
+          "type": "string"
+        },
+        "type": {
+          "description": "类型，默认miniProgram 小程序",
+          "enum": ["miniGame", "miniGamePlugin", "miniProgram", "miniProgramPlugin"],
+          "type": "string"
+        }
+      },
+      "required": ["appid", "privateKeyPath"],
+      "type": "object"
+    },
+    "noticeCardConfig": {
+      "properties": {
+        "alipayQrCodeUrl": {
+          "description": "支付宝小程序二维码访问地址",
+          "type": "string"
+        },
+        "buildUrl": {
+          "description": "小程序构建包下载地址",
+          "type": "string"
+        },
+        "jdQrCodeUrl": {
+          "description": "京东小程序二维码访问地址",
+          "type": "string"
+        },
+        "swanQrCodeUrl": {
+          "description": "百度小程序二维码访问地址",
+          "type": "string"
+        },
+        "ttQrCodeUrl": {
+          "description": "字节小程序二维码访问地址",
+          "type": "string"
+        },
+        "weappQrCodeUrl": {
+          "description": "微信小程序二维码访问地址",
+          "type": "string"
+        }
+      },
+      "required": [
+        "alipayQrCodeUrl",
+        "buildUrl",
+        "jdQrCodeUrl",
+        "swanQrCodeUrl",
+        "ttQrCodeUrl",
+        "weappQrCodeUrl"
+      ],
+      "type": "object"
     }
   }
 }

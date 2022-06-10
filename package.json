@@ -12,7 +12,9 @@
   ],
   "scripts": {
     "start": "tsc --watch",
-    "build": "tsc",
+    "build": "rm -rf lib && npm run update-json-schema && tsc",
+    "prepublishOnly": "npm run build",
+    "update-json-schema": "typescript-json-schema 'src/types/config-json.d.ts' '*' --out=src/schemas/config-json-schema.json --id=configdata --required  --strictNullChecks",
     "lint": "npx eslint --ext .ts, src",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier \"**/*.{ts,md,json}\"",
@@ -25,7 +27,10 @@
   },
   "keywords": [
     "taro",
-    "ci"
+    "ci",
+    "microapp",
+    "microapp-ci",
+    "miniprogram"
   ],
   "author": "czen",
   "dependencies": {
@@ -36,6 +41,7 @@
     "fs": "^0.0.1-security",
     "fs-extra": "^10.1.0",
     "inquirer": "^8.2.4",
+    "jsonschema": "^1.4.1",
     "minidev": "^1.4.1",
     "miniprogram-ci": "^1.8.25",
     "ora": "^4.1.1",
@@ -55,7 +61,8 @@
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.2",
+    "typescript-json-schema": "^0.53.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

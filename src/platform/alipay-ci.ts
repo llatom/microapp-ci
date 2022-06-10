@@ -3,7 +3,7 @@ import minidev from 'minidev'
 import * as path from 'path'
 import fs from 'fs'
 import BaseCI from '../base-ci'
-import generateQrCode from '../utils/qr-code'
+import generateQrCode from '../utils/utils'
 import { spinner } from '../utils/spinner'
 export default class AlipayCI extends BaseCI {
   protected async _init(): Promise<void> {

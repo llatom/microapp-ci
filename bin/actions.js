@@ -1,7 +1,8 @@
 const inquirer = require('inquirer')
 const { MicroAppCi } = require('../lib/index.js')
-const { writeDeployConfigFile, checkDeployConfigFile } = require('../lib/utils/fs.js')
 const {
+  writeDeployConfigFile,
+  checkDeployConfigFile,
   getBuildEnv,
   getBuildAction,
   getBuildPlatform,

@@ -1,6 +1,52 @@
+import fs from 'fs'
+import path from 'path'
 import { spinner } from './spinner'
 import simpleGit from 'simple-git'
+import { validateConfigData } from './json-schema'
+import { DEPLOY_CONFIG_DATA } from '../types/config-json'
+import DEFAULT_CONFIG_DATA from '../schemas/default-deploy-config.json'
 const Dayjs = require('dayjs')
+const CONFIG_FILE_NAME = 'deploy.config.json'
+
+export function checkDeployConfigFile(rootDir: string): DEPLOY_CONFIG_DATA | null {
+  try {
+    const data = fs.readFileSync(path.join(rootDir, CONFIG_FILE_NAME), { encoding: 'utf-8' })
+    const configJson = JSON.parse(data)
+
+    // 对配置文件做运行时校验
+    const result = validateConfigData(configJson)
+
+    // 校验失败，数据不符合预期
+    if (!result?.valid) {
+      spinner.error(
+        `${CONFIG_FILE_NAME} check failed \n${result?.errors.map((item) => item.toString()).join('\n')}`
+      )
+      return null
+    }
+    spinner.success(`${CONFIG_FILE_NAME} check success`)
+    return JSON.parse(data)
+  } catch (err: any) {
+    spinner.error(`${err.message} check failed`)
+    spinner.info('请运行"microapp-ci init" 初始化配置文件')
+    return null
+  }
+}
+
+export function writeDeployConfigFile(rootDir: string) {
+  fs.writeFileSync(path.join(rootDir, CONFIG_FILE_NAME), JSON.stringify(DEFAULT_CONFIG_DATA, null, 2), {
+    encoding: 'utf-8',
+  })
+}
+
+export function getProjectConfig(miniprogramWorkspack: string) {
+  try {
+    const data = fs.readFileSync(path.join(miniprogramWorkspack, 'project.config.json'), { encoding: 'utf-8' })
+    return JSON.parse(data)
+  } catch (e) {
+    console.log(e)
+    return null
+  }
+}
 
 /**
  * 获取buildEnv： preview | upload
@@ -127,4 +173,12 @@ export function convertPlatformToText(platform) {
       break
   }
   return platformText
+}
+
+/**
+ * 生产二维码输出到控制台
+ * @param url 链接地址
+ */
+export default function generateQrCode(url: string) {
+  require('qrcode-terminal').generate(url, { small: true })
 }

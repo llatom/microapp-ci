@@ -2,7 +2,7 @@
 import * as shell from 'shelljs'
 import * as path from 'path'
 import BaseCI from '../base-ci'
-import generateQrCode from '../utils/qr-code'
+import generateQrCode from '../utils/utils'
 import { spinner } from '../utils/spinner'
 export default class SwanCI extends BaseCI {
   private swanBin = path.resolve(require.resolve('swan-toolkit'), '../../.bin/swan')

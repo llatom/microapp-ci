@@ -11,9 +11,9 @@ import AlipayCI from './platform/alipay-ci'
 import SwanCI from './platform/swan-ci'
 import { spinner } from './utils/spinner'
 import { convertPlatformToText } from './utils/utils'
-import { DEPLOY_CONFIG_DATA } from './types/base-ci'
+import { DEPLOY_CONFIG_DATA } from './types/config-json'
 
-type Platforms = 'weapp' | 'weay' | 'alipay' | 'tt' | 'jd' | 'swan'
+type Platforms = 'weapp' | 'weqy' | 'alipay' | 'tt' | 'jd' | 'swan'
 type DirsMap = Map<Platforms, string>
 const tempDir = 'dist'
 
