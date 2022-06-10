@@ -19,14 +19,14 @@ export function checkDeployConfigFile(rootDir: string): DEPLOY_CONFIG_DATA | nul
     // 校验失败，数据不符合预期
     if (!result?.valid) {
       spinner.error(
-        `${CONFIG_FILE_NAME} check failed \n${result?.errors.map((item) => item.toString()).join('\n')}`
+        `${CONFIG_FILE_NAME} 配置文件校验失败 \n${result?.errors.map((item) => item.toString()).join('\n')}`
       )
       return null
     }
-    spinner.success(`${CONFIG_FILE_NAME} check success`)
+    spinner.success(`${CONFIG_FILE_NAME} 配置文件校验成功`)
     return JSON.parse(data)
   } catch (err: any) {
-    spinner.error(`${err.message} check failed`)
+    spinner.error(`${err.message} 配置文件校验失败`)
     spinner.info('请运行"microapp-ci init" 初始化配置文件')
     return null
   }
@@ -98,6 +98,7 @@ export function getBuildEnv() {
   return allowBuildEnv[0]
 }
 
+// 自定义版本号生成规则
 export function handleGenerateVersionByDate() {
   const date = Dayjs().format('YYMMDDHHMM')
   return date

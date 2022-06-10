@@ -1,15 +1,10 @@
- module.exports = {
+module.exports = {
   root: true,
 
   parser: '@typescript-eslint/parser', // 指定ESLint解析器
 
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    "prettier"
-  ],
-  "plugins": [
-    "prettier"
-  ],
+  extends: ['plugin:@typescript-eslint/recommended', 'prettier'],
+  plugins: ['prettier'],
 
   rules: {
     quotes: ['error', 'single'], //强制使用单引号

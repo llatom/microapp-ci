@@ -19,11 +19,6 @@
     "baseUrl": ".",
     "rootDir": "./src",
     "noImplicitAny": false,
-    // "paths": {
-    //   "@/*": ["src/*"],
-    // },
-    // "declaration": true,
-    // "declarationDir": "types",
     "lib": ["esnext", "dom", "dom.iterable", "scripthost", "es5"]
   },
   "include": ["src", "node_modules/ora"],

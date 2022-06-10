@@ -173,24 +173,17 @@ function buildAction() {
   const BUILD_ACTION = getBuildAction()
   const BUILD_PLATFORM = getBuildPlatform()
   const currentVersion = handleGenerateVersionByDate()
+  //upload为发布小程序 到体验版，默认为生产环境，不读取配置env，避免测试环境发生产
+  const defaultBuildConfig = { platforms: BUILD_PLATFORM, env: BUILD_ACTION === 'preview' ? BUILD_ENV : 'prod' }
+  const deployConfig = { ...checkDeployConfigFile(currentDir), ...defaultBuildConfig }
+  // 版本号设置，自定义版本号规则或配置发布版本号
+  const version = deployConfig.isGenerateVersion
+    ? deployConfig.majorVersion + '.' + currentVersion
+    : deployConfig.version
+  deployConfig.version = version
   if (BUILD_ACTION === 'preview') {
-    const previewConfig = { platforms: BUILD_PLATFORM, env: BUILD_ENV }
-    const deployConfig = { ...checkDeployConfigFile(currentDir), ...previewConfig }
-    const version = deployConfig.isGenerateVersion
-      ? deployConfig.majorVersion + '.' + currentVersion
-      : deployConfig.version
-    deployConfig.version = version
     new MicroAppCi(deployConfig).preview()
   } else {
-    const uploadConfig = {
-      platforms: BUILD_PLATFORM,
-      env: 'prod',
-    }
-    const deployConfig = { ...checkDeployConfigFile(currentDir), ...uploadConfig }
-    const version = deployConfig.isGenerateVersion
-      ? deployConfig.majorVersion + '.' + currentVersion
-      : deployConfig.version
-    deployConfig.version = version
     new MicroAppCi(deployConfig).upload()
   }
 }
