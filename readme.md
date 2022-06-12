@@ -5,6 +5,9 @@
  - 支持构建完毕后自动打开小程序开发这个工具、上传作为体验版，生成预览二维码
  - 通过命令行工具 microapp-ci 执行预定义的命令，把根据 commit msg 生成的更新描述，各平台小程序命令行工具生成的预览码、体验码及构建压缩包等提测/发布信息，通过webhook推送到飞书群组。(如需推送钉钉，可fork适配钉钉消息格式推送)
 
+#### 整体流程
+<img src="https://raw.githubusercontent.com/marsczen/microapp-ci/master/flow.jpg" alt="preview" width="800"/>
+
 ### 安装
 ---
 #### 方式一： 全局安装 microapp-ci
